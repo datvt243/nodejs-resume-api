@@ -5,9 +5,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import session from 'express-session';
+import exitHook from 'exit-hook';
 
 import { errorsMiddelware } from './middlewares/errorsMiddleware.js';
-import { sessionConfig, corsConfig } from './config/index.js';
+
+import { sessionConfig } from './config/sessionConfig.js';
+import { corsConfig } from './config/corsConfig.js';
+
 import router from './routers/index.js';
 
 const runServer = () => {
@@ -60,13 +64,19 @@ const runServer = () => {
     app.listen(LOCAL_PORT, () => {
         console.log(`App listening on port: ${LOCAL_PORT}`);
     });
+
+    exitHook(() => {
+        /**
+         * TODO: close connect mongo (coming soon...)
+         */
+    });
 };
 
 /**
  * connect to mongoDB
  */
 const { LOCAL_PORT } = process.env;
-import connectMongo from './services/mongodb.js';
+import connectMongo from './database/mongodb.js';
 connectMongo(() => {
     runServer?.();
 });

@@ -1,13 +1,13 @@
 {
     "name": "nodejs-resume-api",
-    "private": true,
     "type": "module",
+    "private": true,
     "version": "1.0.0",
     "description": "",
     "scripts": {
+        "dev": "nodemon --exec babel-node src/server.js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "npm run remove-build && npm run build-babel && node ./build/server.js",
-        "dev": "nodemon --exec babel-node ./src/server.js",
         "nodemon": "nodemon --exec babel-node ./src/server.js",
         "build-babel": "babel ./src -d ./build",
         "remove-build": "rm -rf build",
@@ -22,8 +22,11 @@
         "body-parser": "^1.20.2",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
+        "exit-hook": "^4.0.0",
         "express": "^4.19.2",
         "express-session": "^1.18.0",
+        "http-status-codes": "^2.3.0",
+        "joi": "^17.13.1",
         "mongoose": "^8.4.0",
         "pug": "^3.0.2"
     },

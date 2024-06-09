@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { StatusCodes } from 'http-status-codes';
 
 import Information from '../models/informationModel.js';
 import { GENDER } from '../constant/constant.js';
@@ -65,14 +66,13 @@ export const informationUpdateDocument = async (req, res, next) => {
     try {
         const { errors = [], document = null } = await informationCreate(req.body);
         if (errors.length) {
-            res.status(REQUEST_STATUS.BAD).json({ errors });
+            res.status(StatusCodes.BAD_REQUEST).json({ errors });
             return;
         }
-        res.status(REQUEST_STATUS.OK).json({
+        res.status(StatusCodes.OK).json({
             ...document,
         });
     } catch (err) {
-        /* res.status(REQUEST_STATUS.BAD).json({ ...err }); */
         _throwError(res, err);
     }
 };

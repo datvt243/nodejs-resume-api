@@ -1,8 +1,11 @@
-import Experience from '../models/experienceModel.js';
+import { StatusCodes } from 'http-status-codes';
 import { GENDER } from '../constant/constant.js';
-import { _throwError } from '../utils/helper.js';
+import { resBadRequest } from '../utils/helper.js';
 
-import { informationRegister } from '../controllers/informationController.js';
+import Experience from '../models/experienceModel.js';
+
+import { schemaAuthLoginAndRegister } from '../validations/authValidate.js';
+import { registerNewAccount, isEmailAlreadyExists } from '../services/authService.js';
 
 export const authGetPageRegister = (req, res, next) => {
     res.render('register', {
@@ -18,43 +21,45 @@ export const authGetPageLogin = (req, res, next) => {
 export const authRegister = async (req, res, next) => {
     const { email, password, repassword } = req.body;
 
-    const { flag, errors } = (() => {
-        let flag = true,
-            errors = [];
+    /**
+     * validate dữ liệu đầu vào
+     */
+    const { error, value } = schemaAuthLoginAndRegister.validate({
+        email,
+        password,
+        repassword,
+    });
 
-        if (!email) {
-            flag = false;
-            errors.push('Vui lòng nhập email');
-        }
-
-        if (!password) {
-            flag = false;
-            errors.push('Vui lòng nhập lại mật khẩu');
-        } else if (!(password === repassword)) {
-            flag = false;
-            errors.push('Nhập lại mật khẩu không chính xác');
-        }
-
-        return {
-            flag,
-            errors,
-        };
-    })();
-
-    if (flag) {
-        const success = await informationRegister({ email, password });
-        if (success) {
-            res.redirect('/login');
-        } else {
-            res.status(REQUEST_STATUS.BAD).json('register', {
-                errors: ['Ops!!! Something wrong'],
-                data: null,
-            });
-        }
+    /**
+     * validate lỗi trả về errors
+     */
+    if (error) {
+        resBadRequest(res, error);
         return;
     }
-    res.status(REQUEST_STATUS.BAD).json({
-        errors,
-        data: null,
+
+    /**
+     * check email đã được đăng ký trước đó chưa
+     */
+    const emailHasExits = await isEmailAlreadyExists(value.email);
+    if (emailHasExits) {
+        resBadRequest(res, 'Email đã tồn tại');
+        return;
+    }
+
+    /**
+     * save mới document
+     */
+    const { error: registerFaild, document } = registerNewAccount(value);
+    if (registerFaild) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            errors: ['Ops!!! Something wrong'],
+            data: null,
+        });
+    }
+
+    res.status(StatusCodes.OK).json({
+        errors: null,
+        data: document || {},
     });
 };
