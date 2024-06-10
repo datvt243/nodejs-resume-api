@@ -23,3 +23,32 @@ export const resBadRequest = (res, error) => {
         data: null,
     });
 };
+
+export const formatResponse = (props) => {
+    /**
+     * Chuẩn data trả về của API
+     *  {
+     *      success: boolean        // trạng thái
+     *      message: string         // mess thành công or thất bại
+     *      error: string | array   // danh sách lỗi
+     *      data: null | object{ token: string, user: object{ _id, name } } //  data trả về gồm token và thông tin user
+     *  }
+     */
+    const { type = '', success, message, errors, data = {} } = props;
+
+    let _data = null;
+    if (success && Object.keys(data || {}).length) {
+        const { token = '', user = null } = data;
+        _data = { token, user };
+    }
+
+    return {
+        success,
+        message,
+        errors,
+        data: type === 'register' ? null : _data,
+    };
+};
+export const resFormatResponse = (res, status, props) => {
+    res.status(status).json(formatResponse(props));
+};

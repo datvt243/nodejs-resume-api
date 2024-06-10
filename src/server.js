@@ -18,8 +18,6 @@ const runServer = () => {
     const app = express();
 
     const __dirname = dirname(new URL(import.meta.url).pathname);
-    /* console.log({ dirname: __dirname });
-    console.log({ process_cwd: process.cwd() }); */
 
     /**
      * use Session

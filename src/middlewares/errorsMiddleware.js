@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { NODE_ENV } from '../config/processConfig.js';
 
 export const errorsMiddelware = (err, req, res, next) => {
-    console.log('Ops! we got a problem');
+    console.log('***** WARNING!!! Ops! we got a problem');
 
     res.status(StatusCodes.BAD_REQUEST).json({
         message: err.message,

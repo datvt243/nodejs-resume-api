@@ -1,40 +1,17 @@
 import { StatusCodes } from 'http-status-codes';
-import { GENDER } from '../constant/constant.js';
-import { resBadRequest } from '../utils/helper.js';
+import { resBadRequest, resFormatResponse } from '../utils/helper.js';
 
-import Experience from '../models/experienceModel.js';
+import { schemaAuthRegister, schemaAuthLogin } from '../validations/authValidate.js';
+import { register, login, isEmailAlreadyExists } from '../services/authService.js';
 
-import { schemaAuthLoginAndRegister } from '../validations/authValidate.js';
-import { registerNewAccount, isEmailAlreadyExists } from '../services/authService.js';
-
-export const authGetPageRegister = (req, res, next) => {
-    res.render('register', {
-        data: { id: 'nice' },
-        errors: [],
-    });
-};
-export const authGetPageLogin = (req, res, next) => {
-    res.render('login', {
-        data: null,
-    });
-};
 export const authRegister = async (req, res, next) => {
-    const { email, password, repassword } = req.body;
-
     /**
      * validate dữ liệu đầu vào
+     * { email, password, repassword } = req.body;
      */
-    const { error, value } = schemaAuthLoginAndRegister.validate({
-        email,
-        password,
-        repassword,
-    });
-
-    /**
-     * validate lỗi trả về errors
-     */
+    const { error, value } = schemaAuthRegister.validate(req.body);
     if (error) {
-        resBadRequest(res, error);
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: 'Xảy ra lỗi', errors: error });
         return;
     }
 
@@ -43,23 +20,55 @@ export const authRegister = async (req, res, next) => {
      */
     const emailHasExits = await isEmailAlreadyExists(value.email);
     if (emailHasExits) {
-        resBadRequest(res, 'Email đã tồn tại');
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: 'Email đã tồn tại', errors: null });
         return;
     }
 
     /**
      * save mới document
      */
-    const { error: registerFaild, document } = registerNewAccount(value);
-    if (registerFaild) {
-        res.status(StatusCodes.BAD_REQUEST).json({
-            errors: ['Ops!!! Something wrong'],
-            data: null,
-        });
+    const { success, message } = await register(value);
+
+    if (!success) {
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: message, errors: null });
+        return;
     }
 
-    res.status(StatusCodes.OK).json({
+    resFormatResponse(res, StatusCodes.CREATED, {
+        type: 'register',
+        success: true,
+        message: 'Đăng ký thành công',
         errors: null,
-        data: document || {},
+        data: null,
+    });
+};
+
+export const authLogin = async (req, res) => {
+    const { email, password } = req.query;
+    const { error, value } = schemaAuthLogin.validate({
+        email,
+        password,
+    });
+
+    if (error) {
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, {
+            success: false,
+            message: 'Xảy ra lỗi, thông tin đăng nhập không chính xác',
+            errors: null,
+        });
+        return;
+    }
+
+    const { success, message, errors, data } = await login({ email: value.email, password: value.password });
+
+    if (!success) {
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message, errors: null, data: null });
+        return;
+    }
+    resFormatResponse(res, StatusCodes.ACCEPTED, {
+        success: true,
+        message,
+        errors,
+        data,
     });
 };

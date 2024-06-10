@@ -17,3 +17,15 @@ content-type: application/json
     "password": "12345678",
     "repassword": "12345678"
 } 
+
+
+###
+POST http://localhost:3001/api/v1/login
+content-type: application/json
+
+{
+    "email": "david@gmail.com",
+    "password": "username12311111"
+} 
+
+
