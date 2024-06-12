@@ -1,5 +1,5 @@
 import { schemaAuthLogin } from '../validations/authValidate.js';
-import { informationRegister } from '../controllers/informationController.js';
+
 import { jwtSign } from '../services/jwt.js';
 import Candidate from '../models/informationModel.js';
 

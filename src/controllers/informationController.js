@@ -1,78 +1,61 @@
-import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
+import { resBadRequest, resFormatResponse } from '../utils/helper.js';
 
 import Information from '../models/informationModel.js';
+import { schemaInformation } from '../validations/informationValidate.js';
+
 import { GENDER } from '../constant/constant.js';
-import { _throwError } from '../utils/helper.js';
+import { _throwError, validateSchema } from '../utils/helper.js';
 
-const saltRounds = 10;
+import { update, getDocumentByEmail } from '../services/informationService.js';
 
-const REQUEST = ['first_name', 'last_name', 'position', 'education', 'gender', 'birthday', 'email', 'phone'];
-
-const checkDataInput = (record) => {
-    const errors = [];
-    for (const _key of REQUEST) {
-        if (!record?.[_key]) {
-            errors.push(`Thiếu ${_key}`);
-        }
-    }
-    return errors;
-};
-
-const convertData = (data) => {
-    let { gender, birthday } = data;
-    birthday = +new Date(birthday);
-    return {
-        ...data,
-        birthday,
-    };
-};
-
-export const informationRegister = async (data) => {
-    const { email, password } = data;
-
-    /* mã hoá pwd */
-    const hash = bcrypt.hashSync(password, saltRounds);
-    if (!hash) return {};
-
-    const document = await Information.create({
-        email,
-        password: hash,
+export const getInformationById = async (req, res, next) => {
+    const { id = '', email = '' } = req.params;
+    const doc = await getDocumentById(id);
+    resFormatResponse(res, StatusCodes.OK, {
+        success: !!doc,
+        message: doc ? '' : 'Không tìm thấy người dùng',
+        errors: [],
+        data: doc,
     });
-    return { document };
 };
 
-export const informationCreate = async (data) => {
-    const errors = checkDataInput(data);
-    if (errors.length) {
-        return false;
-    }
-
-    const newData = convertData(data);
-
-    const document = await Information.create(newData);
-    return document ? true : false;
-};
-
-export const informationGetPageIndex = (req, res, next) => {
-    res.render('information/index', {
-        data: {
-            _id: 'Information',
-        },
+export const getInformationByEmail = async (req, res, next) => {
+    const { email = '' } = req.params;
+    const doc = await getDocumentByEmail(email);
+    resFormatResponse(res, StatusCodes.OK, {
+        success: !!doc,
+        message: doc ? '' : 'Không tìm thấy người dùng',
+        errors: [],
+        data: doc,
     });
 };
 
 export const informationUpdateDocument = async (req, res, next) => {
-    try {
-        const { errors = [], document = null } = await informationCreate(req.body);
-        if (errors.length) {
-            res.status(StatusCodes.BAD_REQUEST).json({ errors });
-            return;
-        }
-        res.status(StatusCodes.OK).json({
-            ...document,
-        });
-    } catch (err) {
-        _throwError(res, err);
+    console.log(1);
+    /**
+     * validate data come from req.body
+     */
+    const { isValidated, value, error: _error } = validateSchema({ schema: schemaInformation, item: { ...req.body } });
+    if (!isValidated) {
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: 'Xảy ra lỗi', errors: _error });
+        return;
     }
+
+    /**
+     * update data
+     */
+    const { success, message, data = null, error = [] } = await update(value);
+
+    if (!success) {
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: message, errors: error });
+        return;
+    }
+
+    resFormatResponse(res, StatusCodes.OK, {
+        success: true,
+        message,
+        errors: error,
+        data,
+    });
 };

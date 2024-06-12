@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { resBadRequest, resFormatResponse } from '../utils/helper.js';
+import { validateSchema, resBadRequest, resFormatResponse } from '../utils/helper.js';
 
 import { schemaAuthRegister, schemaAuthLogin } from '../validations/authValidate.js';
 import { register, login, isEmailAlreadyExists } from '../services/authService.js';
@@ -11,7 +11,12 @@ export const authRegister = async (req, res, next) => {
      */
     const { error, value } = schemaAuthRegister.validate(req.body);
     if (error) {
-        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: 'Xảy ra lỗi', errors: error });
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, {
+            type: 'register',
+            success: false,
+            message: 'Xảy ra lỗi',
+            errors: error,
+        });
         return;
     }
 
@@ -20,7 +25,12 @@ export const authRegister = async (req, res, next) => {
      */
     const emailHasExits = await isEmailAlreadyExists(value.email);
     if (emailHasExits) {
-        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: 'Email đã tồn tại', errors: null });
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, {
+            type: 'register',
+            success: false,
+            message: 'Email đã tồn tại',
+            errors: null,
+        });
         return;
     }
 
@@ -30,7 +40,7 @@ export const authRegister = async (req, res, next) => {
     const { success, message } = await register(value);
 
     if (!success) {
-        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: message, errors: null });
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { type: 'register', success: false, message: message, errors: null });
         return;
     }
 
@@ -44,28 +54,29 @@ export const authRegister = async (req, res, next) => {
 };
 
 export const authLogin = async (req, res) => {
-    const { email, password } = req.query;
-    const { error, value } = schemaAuthLogin.validate({
-        email,
-        password,
-    });
-
-    if (error) {
+    /**
+     * validate date come from req
+     */
+    const { isValidated, value = {} } = validateSchema({ schema: schemaAuthLogin, item: { ...req.query } });
+    if (!isValidated) {
         resFormatResponse(res, StatusCodes.UNAUTHORIZED, {
+            type: 'login',
             success: false,
             message: 'Xảy ra lỗi, thông tin đăng nhập không chính xác',
             errors: null,
         });
-        return;
     }
+
+    /* if (!Object.keys(value).length)  */
 
     const { success, message, errors, data } = await login({ email: value.email, password: value.password });
 
     if (!success) {
-        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message, errors: null, data: null });
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { type: 'login', success: false, message, errors: null, data: null });
         return;
     }
     resFormatResponse(res, StatusCodes.ACCEPTED, {
+        type: 'login',
         success: true,
         message,
         errors,

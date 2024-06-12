@@ -2,10 +2,10 @@
 import express from 'express';
 const router = express.Router();
 
-import { informationGetPageIndex, informationUpdateDocument } from '../../../controllers/informationController.js';
+import { getInformationByEmail, informationUpdateDocument } from '../../../controllers/informationController.js';
 
-router.get('/', informationGetPageIndex);
+router.get('/:email', getInformationByEmail);
 
-router.post('/', informationUpdateDocument);
+router.patch('/update', informationUpdateDocument);
 
 export default router;
