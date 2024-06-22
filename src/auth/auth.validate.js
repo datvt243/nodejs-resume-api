@@ -21,5 +21,4 @@ export const schemaAuthLogin = Joi.object({
         .strict()
         .required(),
     password: Joi.string().min(5).trim().strict().required(),
-    /* password: Joi.string().min(5).pattern(passwordRegex).trim().strict().required(), */
 });

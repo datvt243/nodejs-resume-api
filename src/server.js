@@ -7,10 +7,10 @@ import cors from 'cors';
 import session from 'express-session';
 import exitHook from 'exit-hook';
 
-import { errorsMiddelware } from './middlewares/errorsMiddleware.js';
+import { errorsMiddelware } from './middlewares/errors.middleware.js';
 
-import { sessionConfig } from './config/sessionConfig.js';
-import { corsConfig } from './config/corsConfig.js';
+import { sessionConfig } from './config/session.config.js';
+import { corsConfig } from './config/cors.config.js';
 
 import router from './routers/index.js';
 
@@ -60,7 +60,8 @@ const runServer = () => {
      * listen app
      */
     app.listen(LOCAL_PORT, () => {
-        console.log(`App listening on port: ${LOCAL_PORT}`);
+        const str = NODE_ENV === 'development' ? `http://localhost:${LOCAL_PORT}` : LOCAL_PORT;
+        console.log(`App listening on port: ${str}`);
     });
 
     exitHook(() => {
@@ -73,8 +74,8 @@ const runServer = () => {
 /**
  * connect to mongoDB
  */
-const { LOCAL_PORT } = process.env;
-import connectMongo from './database/mongodb.js';
+const { LOCAL_PORT, NODE_ENV } = process.env;
+import connectMongo from './database/mongo.db.js';
 connectMongo(() => {
     runServer?.();
 });

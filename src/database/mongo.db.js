@@ -1,7 +1,6 @@
-import 'dotenv/config';
 import mongoose from 'mongoose';
 
-const { MONGOBD_USER, MONGOBD_PASSWORD } = process.env;
+import { MONGOBD_USER, MONGOBD_PASSWORD } from '../config/process.config.js';
 
 const connectMongo = function (callback = () => {}) {
     mongoose

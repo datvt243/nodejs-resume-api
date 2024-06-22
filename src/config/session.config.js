@@ -1,4 +1,4 @@
-import { SESSION_SECRET } from './processConfig.js';
+import { SESSION_SECRET } from './process.config.js';
 
 export const sessionConfig = () => ({
     secret: SESSION_SECRET,

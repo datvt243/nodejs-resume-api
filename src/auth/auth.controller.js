@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
-import { validateSchema, resBadRequest, resFormatResponse } from '../utils/helper.js';
+import { validateSchema, resBadRequest, resFormatResponse } from '../utils/index.js';
 
-import { schemaAuthRegister, schemaAuthLogin } from '../validations/authValidate.js';
-import { register, login, isEmailAlreadyExists } from '../services/authService.js';
+import { schemaAuthRegister, schemaAuthLogin } from './auth.validate.js';
+import { register, login, isEmailAlreadyExists } from './auth.service.js';
 
 export const authRegister = async (req, res, next) => {
     /**
@@ -57,14 +57,16 @@ export const authLogin = async (req, res) => {
     /**
      * validate date come from req
      */
+
     const { isValidated, value = {} } = validateSchema({ schema: schemaAuthLogin, item: { ...req.query } });
     if (!isValidated) {
         resFormatResponse(res, StatusCodes.UNAUTHORIZED, {
             type: 'login',
             success: false,
-            message: 'Xảy ra lỗi, thông tin đăng nhập không chính xác',
+            message: 'Lỗi validate',
             errors: null,
         });
+        return;
     }
 
     /* if (!Object.keys(value).length)  */

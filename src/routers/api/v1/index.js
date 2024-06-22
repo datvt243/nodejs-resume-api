@@ -3,27 +3,17 @@ import express from 'express';
 
 const router = express.Router();
 
-import routeExperience from './experienceRoute.js';
-import routeEducation from './educationRoute.js';
-import routeInformation from './informationRoute.js';
-import routeAuth from './authRoute.js';
+import routeAuth from './auth.route.js';
+import routeCandidate from './candidate.route.js';
 
-/* router.use('/information', require(path.join(__dirname, './information.route')));
-router.use('/experience', require(path.join(__dirname, './experience.route')));
-router.use('/', require(path.join(__dirname, './auth.route'))); */
+/* import routeExperience from './experience.route.js';
+import routeEducation from './education.route.js'; */
 
-router.use('/information', routeInformation);
-router.use('/experience', routeExperience);
-router.use('/education', routeEducation);
-router.use('/', routeAuth);
-router.get('/', (req, res) => {
-    /* throw new Error('error.message'); */
-    res.render('home/index', {
-        data: {
-            _id: null,
-        },
-    });
-});
+router.use('/auth', routeAuth);
+router.use('/candidate', routeCandidate);
+
+/* router.use('/experience', routeExperience);
+router.use('/education', routeEducation); */
 router.get('/*', (req, res) => {
     res.render('404');
 });

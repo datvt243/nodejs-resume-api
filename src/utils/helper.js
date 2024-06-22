@@ -36,13 +36,8 @@ export const formatResponse = (props) => {
      */
     const { type = '', success, message, errors, data = {} } = props;
 
-    /* let _data = null;
-    if (success && Object.keys(data || {}).length) {
-        const { token = '', user = null } = data;
-        _data = { token, user };
-    } */
-
     const getData = (() => {
+        if (!success) return null;
         let _data = null;
 
         if (type === 'register') return null;
@@ -77,17 +72,19 @@ export const validateSchema = (props) => {
      */
 
     const { schema = null, item = {} } = props;
+    const message = 'Validation has errors';
 
     if (!schema || !item || !Object.keys(item).length) {
         return {
             isValidated: false,
-            message: 'Lỗi validate',
+            message,
         };
     }
 
-    const { error, value } = schema.validate({ ...item }, { abortEarly: false });
+    const validOpt = { abortEarly: false };
+    const { error, value } = schema.validate({ ...item }, validOpt);
 
-    if (error) return { isValidated: false, message: 'Lỗi validate', error: formatValidateError(error) };
+    if (error) return { isValidated: false, message, error: formatValidateError(error) };
 
     return {
         isValidated: true,
@@ -96,7 +93,7 @@ export const validateSchema = (props) => {
 };
 
 const formatValidateError = (error) => {
-    const { details } = error;
+    const { details = [] } = error;
 
     /* const fields = []; */
     const messages = {};

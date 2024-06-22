@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { NODE_ENV } from '../config/processConfig.js';
+import { NODE_ENV } from '../config/process.config.js';
 
 export const errorsMiddelware = (err, req, res, next) => {
     console.log('***** WARNING!!! Ops! we got a problem');

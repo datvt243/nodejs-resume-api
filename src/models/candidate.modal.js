@@ -24,6 +24,8 @@ const candidateShema = new Schema(
         linkLinkedin: { type: String, default: '' },
         linkGithub: { type: String, default: '' },
         linkWebsite: { type: String, default: '' },
+
+        /* education_id: { type: objectId, default: null, required: [false] }, */
     },
     { timestamps: true },
 );

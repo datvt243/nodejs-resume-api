@@ -1,13 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
-import { resBadRequest, resFormatResponse } from '../utils/helper.js';
+import { resBadRequest, resFormatResponse, _throwError, validateSchema } from '../utils/index.js';
 
-import Information from '../models/informationModel.js';
-import { schemaInformation } from '../validations/informationValidate.js';
-
-import { GENDER } from '../constant/constant.js';
-import { _throwError, validateSchema } from '../utils/helper.js';
-
-import { update, getDocumentByEmail } from '../services/informationService.js';
+import { schemaInformation } from './candidate.validate.js';
+import { update, getDocumentByEmail } from './candidate.service.js';
 
 export const getInformationById = async (req, res, next) => {
     const { id = '', email = '' } = req.params;
@@ -32,7 +27,6 @@ export const getInformationByEmail = async (req, res, next) => {
 };
 
 export const informationUpdateDocument = async (req, res, next) => {
-    console.log(1);
     /**
      * validate data come from req.body
      */

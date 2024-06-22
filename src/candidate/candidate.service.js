@@ -1,20 +1,16 @@
-import Candidate from '../models/informationModel.js';
-import { schemaInformation } from '../validations/informationValidate.js';
-import { validateSchema } from '../utils/helper.js';
+import CandidateModel from '../models/candidate.modal.js';
+
+import { schemaInformation } from './candidate.validate.js';
+import { validateSchema } from '../utils/index.js';
 
 export const getDocumentById = async (id) => {
-    const find = await Candidate.findById(id);
+    const find = await CandidateModel.findById(id);
     return find;
 };
 export const getDocumentByEmail = async (email) => {
-    const find = await Candidate.findOne({ email });
+    const find = await CandidateModel.findOne({ email });
     return find;
 };
-
-/* export const finDocumentByIdOrEmail = async (props) => {
-    const email
-    const find = await Candidate.findOne({});
-}; */
 
 export const update = async (item) => {
     /**
@@ -42,12 +38,15 @@ export const update = async (item) => {
     /**
      * convert data
      */
-    const { gender } = value;
+    const res = await CandidateModel.updateOne({ _id: value._id || '' }, value);
 
-    const { _id } = value;
-    const res = await Candidate.updateOne({ _id }, value);
+    /**
+     * lấy thông tin vừa update
+     */
+    const _find = await getDocumentById(value._id);
 
-    const _find = await getDocumentById(_id);
-
-    return { success: true, message: 'Cập nhật thành công', error: [], data: { _find } };
+    /**
+     * return
+     */
+    return { success: true, message: 'Cập nhật thành công', error: [], data: _find ? _find : null };
 };

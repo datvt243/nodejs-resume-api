@@ -1,12 +1,10 @@
-import { schemaAuthLogin } from '../validations/authValidate.js';
-
-import { jwtSign } from '../services/jwt.js';
-import Candidate from '../models/informationModel.js';
-
-import { GenerateSalt, compareHash } from '../utils/bcrypt.js';
+/* import CandidateModel from '../candidate/candidate.model.js'; */
+import CandidateModel from '../models/candidate.modal.js';
+import { schemaAuthLogin } from './auth.validate.js';
+import { GenerateSalt, compareHash, jwtSign } from '../utils/index.js';
 
 export const isEmailAlreadyExists = async (email) => {
-    const find = await Candidate.findOne({ email });
+    const find = await CandidateModel.findOne({ email });
     return find ? true : false;
 };
 
@@ -34,7 +32,7 @@ export const register = async (item) => {
     if (error) return { success: false, message: 'Lỗi validate' };
 
     const bcryptPwd = GenerateSalt(value.password);
-    const document = await Candidate.create({
+    const document = await CandidateModel.create({
         email: value.email,
         password: bcryptPwd,
     });
@@ -55,7 +53,7 @@ export const login = async (data = {}) => {
 
     const { email, password } = data;
 
-    const findUserByEmail = await Candidate.findOne({ email });
+    const findUserByEmail = await CandidateModel.findOne({ email });
 
     if (!findUserByEmail) {
         return {
