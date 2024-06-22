@@ -1,14 +1,14 @@
 /* import CandidateModel from '../candidate/candidate.model.js'; */
 import CandidateModel from '../models/candidate.modal.js';
 import { schemaAuthLogin } from './auth.validate.js';
-import { GenerateSalt, compareHash, jwtSign } from '../utils/index.js';
+import { generateSalt, compareHash, jwtSign } from '../utils/index.js';
 
 export const isEmailAlreadyExists = async (email) => {
     const find = await CandidateModel.findOne({ email });
     return find ? true : false;
 };
 
-export const register = async (item) => {
+export const handlerRegister = async (item) => {
     /**
      * FLOW
      *  1. lấy thông tin input [email, pwd, re-pwd]
@@ -18,6 +18,18 @@ export const register = async (item) => {
      *  4. lưu thông tin
      */
     const { email, password, repassword } = item;
+
+    /**
+     * check Email đã tồn tại chưa
+     */
+    const emailHasExits = await isEmailAlreadyExists(email);
+    if (emailHasExits) {
+        return {
+            success: false,
+            message: 'Email đã tồn tại',
+        };
+    }
+
     /**
      * validate data trước khi lưu vào database
      */
@@ -31,15 +43,15 @@ export const register = async (item) => {
 
     if (error) return { success: false, message: 'Lỗi validate' };
 
-    const bcryptPwd = GenerateSalt(value.password);
+    const bcryptPwd = generateSalt(value.password);
     const document = await CandidateModel.create({
         email: value.email,
         password: bcryptPwd,
     });
-    return { success: true, message: 'Thêm mới thành công' };
+    return { success: true, message: 'Đăng ký thành công' };
 };
 
-export const login = async (data = {}) => {
+export const handlerLogin = async (data = {}) => {
     /**
      * FLOW
      * 1. find user by email

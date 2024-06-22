@@ -6,7 +6,7 @@ export const handlerBcrypt = (str) => {
     return bcrypt.hash(str, saltRounds);
 };
 
-export const GenerateSalt = (pass) => {
+export const generateSalt = (pass) => {
     const salt = bcrypt.genSaltSync(saltRounds);
     const hash = bcrypt.hashSync(pass, salt);
     return hash || pass;

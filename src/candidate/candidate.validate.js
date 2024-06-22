@@ -4,7 +4,7 @@ const passwordRegex = new RegExp(
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}|;:,./<>?])[a-zA-Z0-9!@#$%^&*()_+{}|;:,./<>?]{5,}$',
 );
 
-export const schemaInformation = Joi.object({
+export const schemaCandidate = Joi.object({
     _id: Joi.string().required(),
     first_name: Joi.string().min(1).max(255).trim().strict().required().messages({
         'any.required': 'Họ không được rỗng',

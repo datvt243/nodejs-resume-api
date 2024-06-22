@@ -1,18 +1,18 @@
 import CandidateModel from '../models/candidate.modal.js';
 
-import { schemaInformation } from './candidate.validate.js';
+import { schemaCandidate } from './candidate.validate.js';
 import { validateSchema } from '../utils/index.js';
 
-export const getDocumentById = async (id) => {
+export const handlerCandidateGetInformationById = async (id) => {
     const find = await CandidateModel.findById(id);
     return find;
 };
-export const getDocumentByEmail = async (email) => {
+export const handlerCandidateGetInformationByEmail = async (email) => {
     const find = await CandidateModel.findOne({ email });
     return find;
 };
 
-export const update = async (item) => {
+export const handlerCandidateUpdate = async (item) => {
     /**
      * @return {
      *  success: boolean,
@@ -25,7 +25,7 @@ export const update = async (item) => {
     /**
      * validate data trước khi lưu vào database
      */
-    const { isValidated, message = '', value, error = [] } = validateSchema({ schema: schemaInformation, item });
+    const { isValidated, message = '', value, error = [] } = validateSchema({ schema: schemaCandidate, item });
     if (!isValidated) {
         return {
             success: false,
@@ -43,7 +43,7 @@ export const update = async (item) => {
     /**
      * lấy thông tin vừa update
      */
-    const _find = await getDocumentById(value._id);
+    const _find = await handlerCandidateGetInformationById(value._id);
 
     /**
      * return
