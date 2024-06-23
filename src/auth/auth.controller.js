@@ -4,6 +4,9 @@ import { validateSchema, resFormatResponse } from '../utils/index.js';
 import { schemaAuthRegister, schemaAuthLogin } from './auth.validate.js';
 import { handlerRegister, handlerLogin } from './auth.service.js';
 
+/**
+ * Chức năng Đăng ký mới
+ */
 export const authRegister = async (req, res) => {
     /**
      * validate dữ liệu đầu vào
@@ -32,6 +35,9 @@ export const authRegister = async (req, res) => {
     });
 };
 
+/**
+ * Chức năng Đăng nhập
+ */
 export const authLogin = async (req, res) => {
     /**
      * validate date come from req
@@ -59,6 +65,9 @@ export const authLogin = async (req, res) => {
     });
 };
 
+/**
+ * Chức năng Refresh token
+ */
 export const authRefeshToken = async (req, res) => {
     // coming soon
 };
