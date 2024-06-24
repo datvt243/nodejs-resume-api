@@ -120,7 +120,6 @@ export const baseCreateDocument = async (props) => {
     /**
      * Nếu không có candidateId thì trả về thất bại
      */
-    console.log({ document });
     if (!document.candidateId)
         return formatReturn({ success: false, message: `Thêm mới ${_name ? _name + ' ' : ''} thất bại 1` });
 
@@ -154,7 +153,6 @@ export const baseCreateDocument = async (props) => {
     } catch (err) {
         _success = false;
         _message = `Thêm mới ${_name} thất bại`;
-        console.log({ err });
 
         /**
          * callback thực hiện nếu xảy ra lỗi
