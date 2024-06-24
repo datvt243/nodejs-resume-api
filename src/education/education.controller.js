@@ -7,7 +7,6 @@ import {
     handlerEducationUpdate,
     handlerEducationDelete,
     handlerCheckEducationId,
-    handlerGetEducationById,
 } from './education.service.js';
 
 export const educationCreate = async (req, res) => {
@@ -122,12 +121,8 @@ export const educationDelete = async (req, res) => {
 
 const educationHelperFn = () => {
     const checkId = (id) => {
-        if (!id) {
-            return 'Field _id không được trống';
-        }
-        if (!handlerCheckEducationId(id)) {
-            return 'Thông tin học vấn không tồn tại';
-        }
+        if (!id) return 'Field _id không được trống';
+        if (!handlerCheckEducationId(id)) return 'Thông tin học vấn không tồn tại';
         return '';
     };
 

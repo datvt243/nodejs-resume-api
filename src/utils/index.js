@@ -14,10 +14,7 @@ export const getDataUserIdFromToken = (req) => {
 
     try {
         const { _id: id, exp = null } = jwtVerify(token, TOKEN_SECRET);
-        /* if (+new Date() > exp * 1000) {
-            _id = _id;
-            success = true;
-        } */
+
         _id = id;
         success = true;
     } catch (err) {
