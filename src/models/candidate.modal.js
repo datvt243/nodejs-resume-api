@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const objectId = Schema.objectId;
+const ObjectId = Schema.ObjectId;
 const candidateShema = new Schema(
     {
         email: { type: String, default: '', required: [false, 'Vui lòng nhập email'] },
@@ -25,7 +25,13 @@ const candidateShema = new Schema(
         linkGithub: { type: String, default: '' },
         linkWebsite: { type: String, default: '' },
 
-        /* education_id: { type: objectId, default: null, required: [false] }, */
+        socialMedia: {
+            type: Map,
+            of: String,
+        },
+
+        educationId: { type: ObjectId, default: null, required: [false] },
+        experienceId: { type: ObjectId, default: null, required: [false] },
     },
     { timestamps: true },
 );

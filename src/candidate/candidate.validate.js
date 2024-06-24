@@ -36,7 +36,14 @@ export const schemaCandidate = Joi.object({
     introduction: Joi.string().required().messages({
         'any.required': 'Giới thiệu bản thân không được rỗng',
     }),
-    linkLinkedin: Joi.string().trim().strict().max(255),
-    linkGithub: Joi.string().trim().strict().max(255),
-    linkWebsite: Joi.string().trim().strict().max(255),
+
+    socialMedia: Joi.object({
+        github: Joi.string(),
+        linkedin: Joi.string(),
+        website: Joi.string(),
+    }),
+    educationId: Joi.string(),
+    experienceId: Joi.string(),
+
+    candidateId: Joi.string(),
 });

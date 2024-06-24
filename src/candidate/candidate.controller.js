@@ -6,6 +6,7 @@ import {
     handlerCandidateUpdate,
     handlerCandidateGetInformationByEmail,
     handlerCandidateGetInformationById,
+    handlerGetAboutMe,
 } from './candidate.service.js';
 
 export const candidateGetInformationById = async (req, res) => {
@@ -54,16 +55,24 @@ export const candidateUpdate = async (req, res) => {
         errors: error,
         data,
     });
+};
 
-    /* if (!success) {
-        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: message, errors: error });
-        return;
+export const getAboutMe = async (req, res) => {
+    /**
+     *
+     */
+    const { email = '' } = req.params;
+    if (!email) {
+        res.status(400).json({
+            success: false,
+            message: 'Không tìm thấy email',
+        });
     }
 
-    resFormatResponse(res, StatusCodes.OK, {
-        success: true,
+    const { success, data, message } = await handlerGetAboutMe(email);
+    resFormatResponse(res, success ? StatusCodes.OK : StatusCodes.BAD_REQUEST, {
+        success,
         message,
-        errors: error,
         data,
-    }); */
+    });
 };

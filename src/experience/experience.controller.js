@@ -1,19 +1,19 @@
 import { StatusCodes } from 'http-status-codes';
-import { schemaEducation } from './education.validate.js';
-import { validateSchema, resFormatResponse, jwtVerify } from '../utils/index.js';
+import { schemaExperience } from './experience.validate.js';
+import { validateSchema, resFormatResponse } from '../utils/index.js';
 
 import {
-    handlerEducationCreate,
-    handlerEducationUpdate,
-    handlerEducationDelete,
-    handlerCheckEducationId,
-} from './education.service.js';
+    handlerExperienceCreate,
+    handlerExperienceUpdate,
+    handlerExperienceDelete,
+    handlerCheckExperienceId,
+} from './experience.service.js';
 
-export const educationCreate = async (req, res) => {
+export const experienceCreate = async (req, res) => {
     /**
      * validate data gửi lên
      */
-    const { isValidated, value = {}, error: errValid } = validateSchema({ schema: schemaEducation, item: { ...req.body } });
+    const { isValidated, value = {}, error: errValid } = validateSchema({ schema: schemaExperience, item: { ...req.body } });
     if (!isValidated) {
         return resFormatResponse(res, StatusCodes.BAD_REQUEST, {
             success: false,
@@ -26,7 +26,7 @@ export const educationCreate = async (req, res) => {
      * save mới document
      */
     !value.isCurrent && (value.isCurrent = false);
-    const { success, message, error, data = {} } = await handlerEducationCreate(value);
+    const { success, message, error, data = {} } = await handlerExperienceCreate(value);
 
     resFormatResponse(res, StatusCodes[success ? 'OK' : 'BAD_REQUEST'], {
         success,
@@ -36,8 +36,8 @@ export const educationCreate = async (req, res) => {
     });
 };
 
-export const educationUpdate = async (req, res) => {
-    const _helper = educationHelperFn();
+export const experienceUpdate = async (req, res) => {
+    const _helper = _helperFn();
 
     /**
      * Kiểm tra có _id hay không, và _id có tồn tại trong db hay không
@@ -50,7 +50,7 @@ export const educationUpdate = async (req, res) => {
     /**
      * validate data gửi lên
      */
-    const { isValidated, value = {}, error: errValid } = validateSchema({ schema: schemaEducation, item: { ...req.body } });
+    const { isValidated, value = {}, error: errValid } = validateSchema({ schema: schemaExperience, item: { ...req.body } });
     if (!isValidated) {
         return resFormatResponse(res, StatusCodes.BAD_REQUEST, {
             success: false,
@@ -62,10 +62,8 @@ export const educationUpdate = async (req, res) => {
     /**
      * update document
      */
-    if (!value.isCurrent) {
-        value.isCurrent = false;
-    }
-    const { success, message, error, data = {} } = await handlerEducationUpdate(value);
+    !value.isCurrent && (value.isCurrent = false);
+    const { success, message, error, data = {} } = await handlerExperienceUpdate(value);
     resFormatResponse(res, StatusCodes[success ? 'OK' : 'BAD_REQUEST'], {
         success,
         message,
@@ -74,30 +72,27 @@ export const educationUpdate = async (req, res) => {
     });
 };
 
-export const educationDelete = async (req, res) => {
+export const experienceDelete = async (req, res) => {
     const { id = '' } = req.params;
     if (!id) {
         return resFormatResponse(res, StatusCodes.BAD_REQUEST, { success: false, message: 'ID không được trống' });
     }
 
-    /**
-     * delete
-     */
-    const { success, message, error, data } = await handlerEducationDelete(id, req.body.candidateId);
+    const { success, message, error, data } = await handlerExperienceDelete(id, req.body.candidateId);
     resFormatResponse(res, StatusCodes[success ? 'OK' : 'BAD_REQUEST'], {
         success,
         message,
+        data: null,
+        error,
     });
 };
 
-const educationHelperFn = () => {
-    const checkId = (id) => {
-        if (!id) return 'Field _id không được trống';
-        if (!handlerCheckEducationId(id)) return 'Thông tin học vấn không tồn tại';
-        return '';
-    };
-
+const _helperFn = () => {
     return {
-        checkId,
+        checkId: (id) => {
+            if (!id) return 'Field _id không được trống';
+            if (!handlerCheckExperienceId(id)) return 'Thông tin Kinh nghiệm làm việc không tồn tại';
+            return '';
+        },
     };
 };

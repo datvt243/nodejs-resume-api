@@ -17,7 +17,11 @@ export const verifyToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, TOKEN_SECRET);
         const { _id } = decoded;
-        req.candidateId = _id;
+
+        /**
+         * thêm candidateId vào body
+         */
+        req.body.candidateId = _id;
 
         /** next */
         next();

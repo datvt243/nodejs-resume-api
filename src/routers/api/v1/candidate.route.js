@@ -6,6 +6,7 @@ import { candidateGetInformationByEmail, candidateUpdate } from '../../../candid
 
 router.get('/:email', candidateGetInformationByEmail);
 
-router.patch('/update', candidateUpdate);
+router.put('/update', candidateUpdate);
+/* router.patch('/update', candidateUpdate); */
 
 export default router;

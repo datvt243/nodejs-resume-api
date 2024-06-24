@@ -3,9 +3,12 @@ import express from 'express';
 
 const router = express.Router();
 
+import { getAboutMe } from '../candidate/candidate.controller.js';
 import routerAPI from './api/v1/index.js';
 
 router.use('/api/v1', routerAPI);
+
+router.get('/api/me/:email', getAboutMe);
 router.get('/*', (req, res) => {
     res.send(
         `<div style="text-align: center; padding: 50px">

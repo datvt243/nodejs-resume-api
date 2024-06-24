@@ -1,5 +1,5 @@
 import { validateSchema } from '../utils/index.js';
-/* import { validateSchema, resFormatResponse, jwtVerify, getDataUserIdFromToken } from '../utils/index.js'; */
+/* import { validateSchema, resFormatResponse, jwtVerify } from '../utils/index.js'; */
 
 const formatReturn = (props) => {
     const { success = false, message = '', error = null, data = null } = props;
@@ -38,6 +38,7 @@ export const baseFindDocument = async (props) => {
 export const baseDeleteDocument = async (props) => {
     const { model: MODEL, _id, name = '', userID } = props;
     const _name = (name + '').toLowerCase();
+
     /**
      * lấy doc cần delete
      */
@@ -114,13 +115,14 @@ export const baseUpdateDocument = async (props) => {
 
 export const baseCreateDocument = async (props) => {
     const { document, schema, name = '', model: MODEL } = props;
-    console.log({ name });
     const _name = name ? (name + '').toLowerCase() : '';
 
     /**
      * Nếu không có candidateId thì trả về thất bại
      */
-    if (!document.candidateId) return formatReturn({ success: false, message: `Thêm mới ${_name ? _name + ' ' : ''} thất bại` });
+    console.log({ document });
+    if (!document.candidateId)
+        return formatReturn({ success: false, message: `Thêm mới ${_name ? _name + ' ' : ''} thất bại 1` });
 
     /**
      * validate data trước khi lưu vào database
@@ -132,23 +134,25 @@ export const baseCreateDocument = async (props) => {
     /**
      * Lưu data
      */
-    let _flag = true,
+    let _success = true,
         _data = null,
         _message = '';
+
     try {
         value._id = null;
         await MODEL.create(value);
-        _flag = true;
+
+        _success = true;
         _message = `Thêm mới ${_name} thành công`;
 
         /**
          * callback thực hiện sau khi thêm mới thành công
          */
         if (props?.hookAfterSave) {
-            await props.hookAfterSave?.(document, { success: _flag, message: _message, data: _data });
+            await props.hookAfterSave?.(document, { success: _success, message: _message, data: _data });
         }
     } catch (err) {
-        _flag = false;
+        _success = false;
         _message = `Thêm mới ${_name} thất bại`;
         console.log({ err });
 
@@ -158,5 +162,5 @@ export const baseCreateDocument = async (props) => {
         props?.hookHasErrors?.({ err });
     }
 
-    return formatReturn({ success: _flag, message: _message, data: _data });
+    return formatReturn({ success: _success, message: _message, data: _data });
 };
