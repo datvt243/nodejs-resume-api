@@ -37,7 +37,7 @@ export const baseFindDocument = async (props) => {
 
 export const baseDeleteDocument = async (props) => {
     const { model: MODEL, _id, name = '', userID } = props;
-    const _name = (name + '').toLowercase();
+    const _name = (name + '').toLowerCase();
     /**
      * lấy doc cần delete
      */
@@ -114,7 +114,8 @@ export const baseUpdateDocument = async (props) => {
 
 export const baseCreateDocument = async (props) => {
     const { document, schema, name = '', model: MODEL } = props;
-    const _name = name ? (name + '').toLowercase() : '';
+    console.log({ name });
+    const _name = name ? (name + '').toLowerCase() : '';
 
     /**
      * Nếu không có candidateId thì trả về thất bại

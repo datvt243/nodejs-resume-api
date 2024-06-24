@@ -17,7 +17,7 @@ export const handlerEducationCreate = async (item) => {
         hookAfterSave: async (doc, { data }) => {
             const find = await baseFindDocument({
                 model: EducationModel,
-                fields: { candidateId: candidateId },
+                fields: { candidateId: doc.candidateId },
                 findOne: false, // Tìm tất cả
             });
             data = find;

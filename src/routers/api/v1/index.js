@@ -1,5 +1,6 @@
 import path, { dirname } from 'path';
 import express from 'express';
+import { verifyToken } from '../../../middlewares/verifyToken.middleware.js';
 
 const router = express.Router();
 
@@ -10,8 +11,8 @@ import routeEducation from './education.route.js';
  */
 
 router.use('/auth', routeAuth);
-router.use('/candidate', routeCandidate);
-router.use('/education', routeEducation);
+router.use('/candidate', verifyToken, routeCandidate);
+router.use('/education', verifyToken, routeEducation);
 /* router.use('/experience', routeExperience);
  */
 router.get('/*', (req, res) => {
