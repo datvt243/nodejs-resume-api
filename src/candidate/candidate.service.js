@@ -1,6 +1,7 @@
 import CandidateModel from '../models/candidate.modal.js';
 import EducationModel from '../models/education.model.js';
 import ExperienceModel from '../models/experience.model.js';
+import ReferenceModel from '../models/reference.modal.js';
 
 import { schemaCandidate } from './candidate.validate.js';
 import { validateSchema } from '../utils/index.js';
@@ -66,24 +67,44 @@ export const handlerGetAboutMe = async (email) => {
     }
 
     const { _id } = document;
-    document.experiences = [];
-    document.educations = [];
 
     /**
-     * lấy thông tin kinh nghiêmk làm việc
+     * lấy thông tin liên quan [học vấn, kinh nghiệm, người liên hệ]
      */
+    const getMoreInfo = [
+        { collection: 'experiences', model: ExperienceModel },
+        { collection: 'educations', model: EducationModel },
+        { collection: 'references', model: ReferenceModel },
+    ];
+
+    for (const { collection, model } of getMoreInfo) {
+        document[collection] = [];
+        const _datas = await model.find({ candidateId: _id });
+        if (_datas) {
+            document._doc[collection] = _datas;
+        }
+    }
+
+    /* document.experiences = [];
+    document.educations = [];
+
+    
     const experiences = await ExperienceModel.find({ candidateId: _id });
     if (experiences) {
         document._doc.experiences = experiences;
     }
 
-    /**
-     * lấy thông tin học vấn
-     */
+    
     const educations = await EducationModel.find({ candidateId: _id });
     if (educations) {
         document._doc.educations = educations;
     }
+
+    
+    const references = await ReferenceModel.find({ candidateId: _id });
+    if (references) {
+        document._doc.references = references;
+    } */
 
     return {
         success: true,

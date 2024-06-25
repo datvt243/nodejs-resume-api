@@ -42,6 +42,5 @@ const formatValidateError = (error) => {
         /* _field && fields.push(_field); */
         _mess && (messages[_field] = _mess);
     }
-
     return messages;
 };

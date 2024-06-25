@@ -1,23 +1,15 @@
 import Joi from 'joi';
 
-const passwordRegex = new RegExp(
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}|;:,./<>?])[a-zA-Z0-9!@#$%^&*()_+{}|;:,./<>?]{5,}$',
-);
+import { _id, firstName, lastName, position, phone, candidateId } from '../config/joi.config.js';
+
+import { phoneRegex } from '../config/regex.config.js';
 
 export const schemaCandidate = Joi.object({
-    _id: Joi.string().required(),
-    first_name: Joi.string().min(1).max(255).trim().strict().required().messages({
-        'any.required': 'Họ không được rỗng',
-        'string.min': 'Họ có ít nhất 3 ký tự',
-    }),
-    last_name: Joi.string().min(3).max(255).trim().strict().required().messages({
-        'any.required': 'Tên không được rỗng',
-        'string.min': 'Tên có ít nhất 3 ký tự',
-    }),
-    position: Joi.string().min(3).max(255).trim().strict().required().messages({
-        'any.required': 'Vị trí không được rỗng',
-        'string.min': 'Vị trí có ít nhất 3 ký tự',
-    }),
+    _id: _id,
+    firstName,
+    lastName,
+    position,
+    phone,
     education: Joi.string().min(3).max(255).trim().strict().required().messages({
         'any.required': 'Học vấn không được rỗng',
     }),
@@ -30,20 +22,17 @@ export const schemaCandidate = Joi.object({
     address: Joi.string().min(0).max(255).required().messages({
         'any.required': 'Địa chỉ không được rỗng',
     }),
-    phone: Joi.string().min(0).max(255).required().messages({
-        'any.required': 'SĐT không được rỗng',
-    }),
     introduction: Joi.string().required().messages({
         'any.required': 'Giới thiệu bản thân không được rỗng',
     }),
-
     socialMedia: Joi.object({
         github: Joi.string(),
         linkedin: Joi.string(),
         website: Joi.string(),
     }),
-    educationId: Joi.string(),
-    experienceId: Joi.string(),
+    yearsOfExperience: Joi.number().required().messages({
+        'any.required': 'Số năm kinh nghiệm không được rỗng',
+    }),
 
-    candidateId: Joi.string(),
+    candidateId,
 });

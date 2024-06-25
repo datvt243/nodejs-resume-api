@@ -127,8 +127,8 @@ export const baseCreateDocument = async (props) => {
      * validate data trước khi lưu vào database
      * Make sure data đúng trước khi đc lưu vào db
      */
-    const { isValidated, value = {} } = validateSchema({ schema, item: { ...document } });
-    if (!isValidated) return formatReturn({ success: false, message: `Lỗi validate` });
+    const { isValidated, value = {}, error, message } = validateSchema({ schema, item: { ...document } });
+    if (!isValidated) return formatReturn({ success: false, message, error });
 
     /**
      * Lưu data

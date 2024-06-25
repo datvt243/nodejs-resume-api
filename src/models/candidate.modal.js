@@ -21,15 +21,12 @@ const candidateShema = new Schema(
 
         phone: { type: String, default: '', required: [false, 'Vui lòng nhập số điện thoại'] },
         introduction: { type: String, default: '', required: [false, 'Vui lòng nhập giới thiệu bản thân'] },
-        linkLinkedin: { type: String, default: '' },
-        linkGithub: { type: String, default: '' },
-        linkWebsite: { type: String, default: '' },
 
         socialMedia: {
             type: Map,
             of: String,
         },
-
+        yearsOfExperience: { type: Number, default: 0, required: [false, 'Vui lòng nhập số năm kinh nghiệm'] },
         educationId: { type: ObjectId, default: null, required: [false] },
         experienceId: { type: ObjectId, default: null, required: [false] },
     },
