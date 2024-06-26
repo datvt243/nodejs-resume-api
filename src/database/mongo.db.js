@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import { MONGOBD_USER, MONGOBD_PASSWORD } from '../config/process.config.js';
+import { _consolog } from '../utils/index.js';
 
 const connectMongo = function (callback = () => {}) {
     mongoose
@@ -8,12 +9,12 @@ const connectMongo = function (callback = () => {}) {
             `mongodb+srv://${MONGOBD_USER}:${MONGOBD_PASSWORD}@davidapi.jhhu4ml.mongodb.net/resume-api?retryWrites=true&w=majority&appName=davidAPI`,
         )
         .then(() => {
-            console.log(`--------------------`);
-            console.log('MongooDB Connected!');
+            _consolog(`--------------------`);
+            _consolog('MongooDB Connected!');
             callback?.();
         })
         .catch((err) => {
-            console.error('Connect failed !!!', err);
+            _consolog({ text: `Connect failed !!! ${err}`, type: 'error' });
         });
 };
 

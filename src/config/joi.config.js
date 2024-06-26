@@ -6,6 +6,14 @@ export const _id = Joi.string();
 
 export const candidateId = Joi.string();
 
+export const getObject = (fields) => {
+    return Joi.object(fields);
+    /* .forbidden()
+        .messages({
+            'any.unknown': 'Có vài trường không được phép',
+        }); */
+};
+
 export const email = Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'vn'] } })
     .trim()
@@ -76,3 +84,8 @@ export const endDate = Joi.number().greater(Joi.ref('startDate')).messages({
 
 export const _boolean = Joi.boolean();
 export const _arrayString = Joi.array().items(Joi.string());
+
+export const foreignLanguage = Joi.array().items({
+    language: Joi.string(),
+    level: Joi.string(),
+});

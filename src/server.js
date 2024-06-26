@@ -8,6 +8,7 @@ import session from 'express-session';
 import exitHook from 'exit-hook';
 
 import { errorsMiddelware } from './middlewares/errors.middleware.js';
+import { _consolog } from './utils/index.js';
 
 import { sessionConfig } from './config/session.config.js';
 import { corsConfig } from './config/cors.config.js';
@@ -61,7 +62,7 @@ const runServer = () => {
      */
     app.listen(LOCAL_PORT, () => {
         const str = NODE_ENV === 'development' ? `http://localhost:${LOCAL_PORT}` : LOCAL_PORT;
-        console.log(`App listening on port: ${str}`);
+        _consolog(`App listening on port: ${str}`);
     });
 
     exitHook(() => {

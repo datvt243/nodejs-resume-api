@@ -60,3 +60,31 @@ export const formatResponse = (props) => {
 export const resFormatResponse = (res, status, props) => {
     res.status(status).json(formatResponse(props));
 };
+
+export const formatReturn = (res, props) => {
+    const {
+        success = false,
+        message = '',
+        errors = null,
+        data = null,
+        statusCode = null,
+        statusCodeSuccess = 'OK',
+        statusCodeFaild = 'BAD_REQUEST',
+    } = props;
+
+    const _statusCode = (() => {
+        if (statusCode) return statusCode;
+        const _success = statusCodeSuccess ? statusCodeSuccess : 'OK';
+        const _faild = statusCodeFaild ? statusCodeFaild : 'BAD_REQUEST';
+        return StatusCodes[success ? _success : _faild] || 500;
+    })();
+
+    return res.status(_statusCode).json(
+        formatResponse({
+            success,
+            message,
+            errors,
+            data,
+        }),
+    );
+};

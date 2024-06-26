@@ -1,11 +1,20 @@
 import Joi from 'joi';
 
-import { _id, firstName, lastName, position, phone, candidateId, _arrayString } from '../config/joi.config.js';
+import {
+    getObject,
+    _id,
+    firstName,
+    lastName,
+    position,
+    phone,
+    candidateId,
+    foreignLanguage,
+    _arrayString,
+} from '../config/joi.config.js';
 
-import { phoneRegex } from '../config/regex.config.js';
-
-export const schemaCandidateProfessionalSkills = Joi.object({
+export const schemaCandidatePatch = getObject({
     _id: _id,
+    candidateId,
     professionalSkills: Joi.array()
         .items(
             Joi.object({
@@ -18,9 +27,18 @@ export const schemaCandidateProfessionalSkills = Joi.object({
         .messages({
             'array.base': 'Kỹ năng chuyên môn cần nhập vào là array',
         }),
+    personalSkills: _arrayString,
+    foreignLanguage,
+    socialMedia: Joi.object({
+        github: Joi.string(),
+        linkedin: Joi.string(),
+        website: Joi.string(),
+    }).messages({
+        'object.base': 'Thông tin Social Network cần nhập vào là object',
+    }),
 });
 
-export const schemaCandidate = Joi.object({
+export const schemaCandidate = getObject({
     _id: _id,
     firstName,
     lastName,
@@ -50,10 +68,7 @@ export const schemaCandidate = Joi.object({
         'any.required': 'Số năm kinh nghiệm không được rỗng',
     }),
 
-    foreignLanguage: Joi.array().items({
-        name: Joi.string(),
-        level: Joi.string(),
-    }),
+    foreignLanguage,
 
     personalSkills: _arrayString,
     professionalSkills: Joi.array()

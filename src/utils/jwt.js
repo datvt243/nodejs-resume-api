@@ -4,8 +4,9 @@ const getSecretKey = () => {
     return 'secretKey';
 };
 
-export const jwtSign = (data, secretKey) => {
-    const token = jwt.sign(data, secretKey, { expiresIn: '1d' });
+export const jwtSign = (data, secretKey, props) => {
+    const { expiresIn = '1d' } = props;
+    const token = jwt.sign(data, secretKey, { expiresIn });
     return token;
 };
 

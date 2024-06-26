@@ -3,15 +3,20 @@ import EducationModel from '../models/education.model.js';
 import ExperienceModel from '../models/experience.model.js';
 import ReferenceModel from '../models/reference.modal.js';
 
-import { schemaCandidate, schemaCandidateProfessionalSkills } from './candidate.validate.js';
-import { validateSchema } from '../utils/index.js';
+import { schemaCandidate, schemaCandidatePatch } from './candidate.validate.js';
+import { _consolog, validateSchema } from '../utils/index.js';
 
-export const handlerCandidateGetInformationById = async (id) => {
-    const find = await CandidateModel.findById(id);
-    return find;
+export const handlerCandidateGetInformationById = async (id, props = {}) => {
+    const { select = '' } = props;
+    const find = CandidateModel.findById(id);
+    if (select) {
+        find.select(select);
+    }
+
+    return await find.exec();
 };
 export const handlerCandidateGetInformationByEmail = async (email) => {
-    const find = await CandidateModel.findOne({ email });
+    const find = await CandidateModel.findOne({ email }).exec();
     return find;
 };
 
@@ -41,7 +46,7 @@ export const handlerCandidateUpdate = async (item) => {
     /**
      * convert data
      */
-    const res = await CandidateModel.updateOne({ _id: value._id || '' }, value);
+    const res = await CandidateModel.updateOne({ _id: value._id || '' }, value).exec();
 
     /**
      * lấy thông tin vừa update
@@ -55,7 +60,7 @@ export const handlerCandidateUpdate = async (item) => {
 };
 
 export const handlerGetAboutMe = async (email) => {
-    const document = await CandidateModel.findOne({ email });
+    const document = await CandidateModel.findOne({ email }).exec();
 
     /* const document = { ...find }; */
     if (!document) {
@@ -85,27 +90,6 @@ export const handlerGetAboutMe = async (email) => {
         }
     }
 
-    /* document.experiences = [];
-    document.educations = [];
-
-    
-    const experiences = await ExperienceModel.find({ candidateId: _id });
-    if (experiences) {
-        document._doc.experiences = experiences;
-    }
-
-    
-    const educations = await EducationModel.find({ candidateId: _id });
-    if (educations) {
-        document._doc.educations = educations;
-    }
-
-    
-    const references = await ReferenceModel.find({ candidateId: _id });
-    if (references) {
-        document._doc.references = references;
-    } */
-
     return {
         success: true,
         data: document,
@@ -116,7 +100,7 @@ export const handlerCandidateUpdatePatch = async (item) => {
     /**
      * validate data trước khi lưu vào database
      */
-    const { isValidated, message = '', value, error = [] } = validateSchema({ schema: schemaCandidateProfessionalSkills, item });
+    const { isValidated, message = '', value, error = [] } = validateSchema({ schema: schemaCandidatePatch, item });
     if (!isValidated) {
         return {
             success: false,
@@ -131,12 +115,13 @@ export const handlerCandidateUpdatePatch = async (item) => {
     /**
      * convert data
      */
-    const res = await CandidateModel.updateOne({ _id: _id || '' }, value);
+    const res = await CandidateModel.updateOne({ _id: _id || '' }, value).exec();
 
     /**
      * lấy thông tin vừa update
      */
-    const _find = await handlerCandidateGetInformationById(_id);
+    const _select = Object.keys(value);
+    const _find = await handlerCandidateGetInformationById(_id, { select: _select });
 
     /**
      * return

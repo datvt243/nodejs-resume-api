@@ -1,7 +1,7 @@
 import ReferenceModel from '../models/reference.modal.js';
 
 import { schemaReference } from './reference.validate.js';
-import { validateSchema } from '../utils/index.js';
+import { _consolog, validateSchema } from '../utils/index.js';
 
 import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
 
@@ -23,7 +23,7 @@ export const handlerReferenceCreate = async (item) => {
             data = find;
         },
         hookHasErrors: ({ err }) => {
-            console.log(err);
+            _consolog(err);
         },
     });
 

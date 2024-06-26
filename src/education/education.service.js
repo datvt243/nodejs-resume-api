@@ -1,7 +1,7 @@
 import EducationModel from '../models/education.model.js';
 
 import { schemaEducation } from './education.validate.js';
-import { validateSchema } from '../utils/index.js';
+import { _consolog, validateSchema } from '../utils/index.js';
 
 import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
 
@@ -23,7 +23,7 @@ export const handlerEducationCreate = async (item) => {
             data = find;
         },
         hookHasErrors: ({ err }) => {
-            console.log(err);
+            _consolog(err);
         },
     });
 };

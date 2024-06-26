@@ -1,3 +1,5 @@
+import { _consolog } from '../utils/index.js';
+
 export const validateSchema = (props) => {
     /**
      * @return {
@@ -20,6 +22,8 @@ export const validateSchema = (props) => {
 
     const validOpt = { abortEarly: false }; // Báo lỗi tất cả 1 lượt
     const { error, value } = schema.validate({ ...item }, validOpt);
+
+    _consolog(error);
 
     if (error) return { isValidated: false, message, error: formatValidateError(error) };
 

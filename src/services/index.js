@@ -11,6 +11,22 @@ const formatReturn = (props) => {
     };
 };
 
+const baseCheckDocumentById = async (_id) => {
+    const message = `ID không tồn tại`;
+
+    if (!_id) return { isExist: false, message };
+
+    let isExist = true;
+    const _find = await MODEL.findById(_id).exec();
+    if (!_find) {
+        isExist = false;
+    } else {
+        isExist = true;
+        message = '';
+    }
+    return { isExist, message };
+};
+
 export const baseFindDocument = async (props) => {
     /**
      * Need: params { model, fields = {} }
@@ -24,9 +40,9 @@ export const baseFindDocument = async (props) => {
 
     let find;
     if (findOne) {
-        find = await MODEL.findOne({ ...fields });
+        find = await MODEL.findOne({ ...fields }).exec();
     } else {
-        find = await MODEL.find({ ...fields });
+        find = await MODEL.find({ ...fields }).exec();
     }
 
     return formatReturn({
@@ -42,7 +58,7 @@ export const baseDeleteDocument = async (props) => {
     /**
      * lấy doc cần delete
      */
-    const _find = await MODEL.findById(_id);
+    const _find = await MODEL.findById(_id).exec();
     if (!_find)
         return formatReturn({
             success: false,
@@ -65,7 +81,7 @@ export const baseDeleteDocument = async (props) => {
         message = 'Xoá thất bại',
         error = null;
     try {
-        const { deletedCount = 0 } = await MODEL.deleteOne({ _id: _find._id });
+        const { deletedCount = 0 } = await MODEL.deleteOne({ _id: _find._id }).exec();
         success = !!deletedCount;
         message = 'Xoá thành công';
     } catch (err) {
@@ -90,6 +106,14 @@ export const baseUpdateDocument = async (props) => {
      * }
      */
 
+    const { _id } = document;
+
+    /**
+     * Check Document có tồn tại không -> findById
+     */
+    const { isExist, message: _mess } = await baseCheckDocumentById(_id);
+    if (!isExist) return formatReturn({ success: false, message: _mess });
+
     /**
      * validate data trước khi lưu vào database
      */
@@ -99,18 +123,21 @@ export const baseUpdateDocument = async (props) => {
     /**
      * update data
      */
-    const { _id } = document;
-    const res = await MODEL.updateOne({ _id }, value);
+    const res = await MODEL.updateOne({ _id }, value).exec();
 
     /**
      * lấy thông tin vừa update
      */
-    const _find = await MODEL.findOne({ _id });
+    const _find = await MODEL.findOne({ _id }).exec();
 
     /**
      * return
      */
-    return formatReturn({ success: true, message: 'Cập nhật thành công', data: _find ? _find : null });
+    return formatReturn({
+        success: !!_find,
+        message: !!_find ? 'Cập nhật thành công' : 'Cập nhật thất bại',
+        data: _find ? _find : null,
+    });
 };
 
 export const baseCreateDocument = async (props) => {
@@ -120,8 +147,7 @@ export const baseCreateDocument = async (props) => {
     /**
      * Nếu không có candidateId thì trả về thất bại
      */
-    if (!document.candidateId)
-        return formatReturn({ success: false, message: `Thêm mới ${_name ? _name + ' ' : ''} thất bại 1` });
+    if (!document.candidateId) return formatReturn({ success: false, message: `Thêm mới ${_name ? _name + ' ' : ''} thất bại` });
 
     /**
      * validate data trước khi lưu vào database
@@ -139,7 +165,7 @@ export const baseCreateDocument = async (props) => {
 
     try {
         value._id = null;
-        await MODEL.create(value);
+        await MODEL.create(value).exec();
 
         _success = true;
         _message = `Thêm mới ${_name} thành công`;

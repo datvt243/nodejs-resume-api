@@ -5,7 +5,7 @@ const ObjectId = Schema.ObjectId;
 
 const foreignLanguageSchema = new Schema(
     {
-        name: { type: String, required: true },
+        foreignLanguage: { type: String, required: true },
         level: { type: String, required: true },
     },
     { _id: false },
