@@ -12,7 +12,6 @@ export const validateSchema = (props) => {
 
     const { schema = null, item = {} } = props;
     const message = 'Validation has errors';
-
     if (!schema || !item || !Object.keys(item).length) {
         return {
             isValidated: false,
@@ -22,8 +21,6 @@ export const validateSchema = (props) => {
 
     const validOpt = { abortEarly: false }; // Báo lỗi tất cả 1 lượt
     const { error, value } = schema.validate({ ...item }, validOpt);
-
-    _consolog(error);
 
     if (error) return { isValidated: false, message, error: formatValidateError(error) };
 

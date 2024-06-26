@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const ObjectId = Schema.ObjectId;
-const educationShema = new Schema(
+const ObjectId = mongoose.Schema.Types.ObjectId;
+const shema = new Schema(
     {
-        _id: { type: ObjectId, required: [false, 'Vui lòng nhập ID'] },
+        _id: ObjectId,
         shool: { type: String, default: '', required: [false, 'Vui lòng nhập Tên trường'] },
         major: { type: String, default: '', required: [false, 'Vui lòng nhập ngành học'] },
         startDate: { type: Number, default: '', required: [false, 'Vui lòng nhập ngày bắt đầu'] },
@@ -16,6 +16,6 @@ const educationShema = new Schema(
     { timestamps: true },
 );
 
-const Education = mongoose.model('education', educationShema);
+const Education = mongoose.model('education', shema);
 
 export default Education;

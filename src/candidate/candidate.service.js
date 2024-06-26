@@ -1,4 +1,4 @@
-import CandidateModel from '../models/candidate.modal.js';
+import CandidateModel from '../models/candidate.model.js';
 import EducationModel from '../models/education.model.js';
 import ExperienceModel from '../models/experience.model.js';
 import ReferenceModel from '../models/reference.modal.js';

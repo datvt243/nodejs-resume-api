@@ -2,6 +2,50 @@ import Joi from 'joi';
 
 import { phoneRegex } from '../config/regex.config.js';
 
+export const settingJoiValidate = (props = {}) => {
+    const { type = 'string', min = null, max = null, required = false, label = '', pattern = '' } = props;
+
+    const _messages = {};
+    const _joi = Joi;
+
+    if (type) {
+        if (type === 'string') _joi.string();
+        if (type === 'number') _joi.number();
+        if (type === 'boolean') _joi.boolean();
+        _messages[`${type}.empty`] = 'Họ tên không được trống';
+    }
+
+    if (pattern) {
+        _joi.pattern(pattern);
+    }
+
+    if (min !== null) {
+        _joi.min(min);
+        _messages[`${type}.min`] =
+            type === 'string' ? '{#label} có ít nhất {#limit} ký tự' : '{#label} không được nhỏ hơn {#limit}';
+    }
+    if (max !== null) {
+        _joi.max(max);
+        _messages[`${type}.max`] =
+            type === 'string' ? '{#label} có nhiều nhất {#limit} ký tự' : '{#label} không được lớn hơn {#limit}';
+    }
+
+    if (required) {
+        _joi.required();
+        _messages[`any.required`] = `{#label} là bắt buộc`;
+    }
+
+    _joi.trim().strict();
+
+    if (label) {
+        _joi.label(label);
+    }
+
+    _joi.messages(_messages);
+
+    return _joi;
+};
+
 export const _id = Joi.string();
 
 export const candidateId = Joi.string();
@@ -89,3 +133,13 @@ export const foreignLanguage = Joi.array().items({
     language: Joi.string(),
     level: Joi.string(),
 });
+
+export const _stringDefault = (props) => {
+    const { min = 3, max = 100, title = 'Title' } = props;
+    return Joi.string().min(min).max(max).trim().strict().required().label(title).messages({
+        'any.required': `{#label} là bắt buộc`,
+        'string.min': `{#label} có ít nhất {#limit} ký tự`,
+        'string.max': `{#label} có ít nhất {#limit} ký tự`,
+        'string.empty': `{#label} không được trống`,
+    });
+};

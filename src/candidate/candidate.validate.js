@@ -42,11 +42,7 @@ export const schemaCandidate = getObject({
     _id: _id,
     firstName,
     lastName,
-    position,
     phone,
-    education: Joi.string().min(3).max(255).trim().strict().required().messages({
-        'any.required': 'Học vấn không được rỗng',
-    }),
     marital: Joi.boolean().required().messages({
         'any.required': 'Tình trạng hôn nhân không được rỗng',
     }),
@@ -67,25 +63,6 @@ export const schemaCandidate = getObject({
         linkedin: Joi.string(),
         website: Joi.string(),
     }),
-    yearsOfExperience: Joi.number().required().messages({
-        'any.required': 'Số năm kinh nghiệm không được rỗng',
-    }),
-
-    foreignLanguage,
-
-    personalSkills: _arrayString,
-    professionalSkills: Joi.array()
-        .items(
-            Joi.object({
-                name: Joi.string().required().messages({ 'any.required': 'Tên kỹ năng không được rỗng' }),
-                exp: Joi.number().required().messages({ 'any.required': 'Số năm kinh nghiệm không được rỗng' }),
-            }).messages({
-                'object.base': 'Kỹ năng chuyên môn cần nhập vào là object',
-            }),
-        )
-        .messages({
-            'array.base': 'Kỹ năng chuyên môn cần nhập vào là array',
-        }),
     candidateId,
 });
 

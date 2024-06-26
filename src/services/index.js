@@ -2,17 +2,17 @@ import { validateSchema } from '../utils/index.js';
 /* import { validateSchema, resFormatResponse, jwtVerify } from '../utils/index.js'; */
 
 const formatReturn = (props) => {
-    const { success = false, message = '', error = null, data = null } = props;
+    const { success = false, message = '', errors = null, data = null } = props;
     return {
         success,
         message,
-        error,
+        errors,
         data,
     };
 };
 
-const baseCheckDocumentById = async (_id) => {
-    const message = `ID không tồn tại`;
+const baseCheckDocumentById = async (MODEL, _id) => {
+    let message = `ID không tồn tại`;
 
     if (!_id) return { isExist: false, message };
 
@@ -58,7 +58,7 @@ export const baseDeleteDocument = async (props) => {
     /**
      * Check Document có tồn tại không -> findById
      */
-    const { isExist, message: _mess, document } = await baseCheckDocumentById(__id);
+    const { isExist, message: _mess, document } = await baseCheckDocumentById(MODEL, __id);
     if (!isExist) return formatReturn({ success: false, message: _mess });
 
     const { _id, candidateId = '' } = document;
@@ -89,12 +89,15 @@ export const baseDeleteDocument = async (props) => {
     return formatReturn({
         success,
         message,
-        error,
+        errors: error,
     });
 };
 
 export const baseUpdateDocument = async (props) => {
-    const { schema, document, model: MODEL } = props;
+    /**
+     * get values
+     */
+    const { document, model: MODEL } = props;
 
     /**
      * @return {
@@ -105,42 +108,53 @@ export const baseUpdateDocument = async (props) => {
      * }
      */
 
-    const { _id } = document;
+    const _valueUpdate = { ...document };
+    const { _id } = _valueUpdate;
 
     /**
      * Check Document có tồn tại không -> findById
      */
-    const { isExist, message: _mess } = await baseCheckDocumentById(_id);
+    const { isExist, message: _mess } = await baseCheckDocumentById(MODEL, _id);
     if (!isExist) return formatReturn({ success: false, message: _mess });
 
     /**
-     * validate data trước khi lưu vào database
+     * validate ở mongoose model
      */
-    const { isValidated, message = '', value, error = [] } = validateSchema({ schema, item: document });
-    if (!isValidated) return formatReturn({ success: false, message, error });
+    const modelValid = await _baseHelper().modelValidate(MODEL, { ..._valueUpdate });
+    if (!modelValid.success) return formatReturn({ success: false, message: modelValid.message, errors: modelValid.errors });
 
     /**
-     * update data
+     * Save
      */
-    const res = await MODEL.updateOne({ _id }, value).exec();
+    let _success = true,
+        _message = 'Cập nhật thành công',
+        _data = null,
+        _errors = [];
 
-    /**
-     * lấy thông tin vừa update
-     */
-    const _find = await MODEL.findOne({ _id }).exec();
-
-    /**
-     * return
-     */
-    return formatReturn({
-        success: !!_find,
-        message: !!_find ? 'Cập nhật thành công' : 'Cập nhật thất bại',
-        data: _find ? _find : null,
-    });
+    try {
+        await MODEL.updateOne({ _id }, _valueUpdate).exec();
+        _data = await _baseHelper().getDocumentUpdated(_id, { model: MODEL, select: Object.keys(_valueUpdate) });
+    } catch (err) {
+        const { message = '', errors = [] } = _baseHelper().handlerCatchError(err);
+        _success = false;
+        _message = message || `Cập nhật thất bại`;
+        _errors = errors;
+        props?.hookHasErrors?.({ err });
+    } finally {
+        /**
+         * return
+         */
+        return formatReturn({
+            success: _success,
+            message: _message,
+            errors: _errors,
+            data: _data,
+        });
+    }
 };
 
 export const baseCreateDocument = async (props) => {
-    const { document, schema, name = '', model: MODEL } = props;
+    const { document, name = '', model: MODEL } = props;
     const _name = name ? (name + '').toLowerCase() : '';
 
     /**
@@ -149,26 +163,21 @@ export const baseCreateDocument = async (props) => {
     if (!document.candidateId) return formatReturn({ success: false, message: `Thêm mới ${_name ? _name + ' ' : ''} thất bại` });
 
     /**
-     * validate data trước khi lưu vào database
-     * Make sure data đúng trước khi đc lưu vào db
+     * validate ở mongoose model
      */
-    const { isValidated, value = {}, error, message } = validateSchema({ schema, item: { ...document } });
-    if (!isValidated) return formatReturn({ success: false, message, error });
+    const modelValid = await _baseHelper().modelValidate(MODEL, { ...document });
+    if (!modelValid.success) return formatReturn({ success: false, message: modelValid.message, errors: modelValid.errors });
 
     /**
      * Lưu data
      */
     let _success = true,
         _data = null,
-        _message = '';
+        _message = `Thêm mới ${_name} thành công`,
+        _errors = [];
 
     try {
-        value._id = null;
-        await MODEL.create(value).exec();
-
-        _success = true;
-        _message = `Thêm mới ${_name} thành công`;
-
+        _data = await MODEL.create({ _id: null, ...document });
         /**
          * callback thực hiện sau khi thêm mới thành công
          */
@@ -176,14 +185,105 @@ export const baseCreateDocument = async (props) => {
             await props.hookAfterSave?.(document, { success: _success, message: _message, data: _data });
         }
     } catch (err) {
+        const { message = '', errors = [] } = _baseHelper().handlerCatchError(err);
         _success = false;
-        _message = `Thêm mới ${_name} thất bại`;
+        _message = message || `Thêm mới ${_name} thất bại`;
+        _errors = errors;
 
         /**
          * callback thực hiện nếu xảy ra lỗi
          */
         props?.hookHasErrors?.({ err });
+    } finally {
+        /**
+         * return
+         */
+        return formatReturn({ success: _success, message: _message, errors: _errors, data: _data });
     }
+};
 
-    return formatReturn({ success: _success, message: _message, data: _data });
+export const basePatchDocument = async (props) => {
+    /**
+     * get value
+     */
+    const { schema, document, model: MODEL } = props;
+
+    const { _id } = document;
+
+    /**
+     * Check Document có tồn tại không -> findById
+     */
+    const { isExist, message: _mess } = await baseCheckDocumentById(MODEL, _id);
+    if (!isExist) return formatReturn({ success: false, message: _mess });
+
+    /**
+     * validate data trước khi lưu vào database
+     */
+    const { isValidated, message = '', value, error = [] } = validateSchema({ schema, item: document });
+    if (!isValidated) return formatReturn({ success: false, message, errors: error });
+
+    try {
+        await MODEL.updateOne({ _id }, value).exec();
+        /**
+         * lấy thông tin vừa update
+         */
+        const select = Object.keys(value);
+        const data = await _baseHelper().getDocumentUpdated(_id, { model: MODEL, select });
+
+        /**
+         * return
+         */
+        return { success: true, message: 'Cập nhật thành công', errors: [], data: _find ? _find : null };
+    } catch (err) {
+        /**
+         * catch errors
+         */
+        return { success: false, message: 'Cập nhật thất bại', error: err, data: null };
+    }
+};
+
+const _baseHelper = () => {
+    return {
+        getDocumentUpdated: async (_id, props = {}) => {
+            const { model: MODEL, select = '' } = props;
+            const find = MODEL.findById(_id);
+            if (select) {
+                find.select(select);
+            }
+            return await find.exec();
+        },
+        modelValidate: async (model, value) => {
+            let message = '',
+                errors = [],
+                success = true;
+
+            try {
+                await model.validate(value);
+            } catch (err) {
+                const { _message, errors: _errors } = err;
+                const errs = [];
+                for (const [k, v] of Object.entries(_errors)) {
+                    errs.push(k);
+                }
+
+                success = false;
+                message = _message;
+                errors = errs;
+            }
+            return { success, message, errors };
+        },
+        handlerCatchError: (error) => {
+            if (error instanceof ReferenceError) {
+                return {
+                    message: 'ReferenceError',
+                    errors: [error.message],
+                };
+            }
+
+            return {
+                message: 'Lỗi không xác định',
+                errors: [],
+            };
+        },
+    };
 };

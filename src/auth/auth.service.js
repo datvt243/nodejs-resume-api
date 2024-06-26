@@ -1,5 +1,5 @@
 /* import CandidateModel from '../candidate/candidate.model.js'; */
-import CandidateModel from '../models/candidate.modal.js';
+import CandidateModel from '../models/candidate.model.js';
 import { schemaAuthLogin } from './auth.validate.js';
 import { generateSalt, compareHash, jwtSign, validateSchema } from '../utils/index.js';
 import { TOKEN_SECRET, TOKEN_REFRESH } from '../config/process.config.js';
