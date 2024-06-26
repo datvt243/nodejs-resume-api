@@ -1,8 +1,24 @@
 import Joi from 'joi';
 
-import { _id, firstName, lastName, position, phone, candidateId } from '../config/joi.config.js';
+import { _id, firstName, lastName, position, phone, candidateId, _arrayString } from '../config/joi.config.js';
 
 import { phoneRegex } from '../config/regex.config.js';
+
+export const schemaCandidateProfessionalSkills = Joi.object({
+    _id: _id,
+    professionalSkills: Joi.array()
+        .items(
+            Joi.object({
+                name: Joi.string().required().messages({ 'any.required': 'Tên kỹ năng không được rỗng' }),
+                exp: Joi.number().required().messages({ 'any.required': 'Số năm kinh nghiệm không được rỗng' }),
+            }).messages({
+                'object.base': 'Kỹ năng chuyên môn cần nhập vào là object',
+            }),
+        )
+        .messages({
+            'array.base': 'Kỹ năng chuyên môn cần nhập vào là array',
+        }),
+});
 
 export const schemaCandidate = Joi.object({
     _id: _id,
@@ -34,5 +50,26 @@ export const schemaCandidate = Joi.object({
         'any.required': 'Số năm kinh nghiệm không được rỗng',
     }),
 
+    foreignLanguage: Joi.array().items({
+        name: Joi.string(),
+        level: Joi.string(),
+    }),
+
+    personalSkills: _arrayString,
+    professionalSkills: Joi.array()
+        .items(
+            Joi.object({
+                name: Joi.string().required().messages({ 'any.required': 'Tên kỹ năng không được rỗng' }),
+                exp: Joi.number().required().messages({ 'any.required': 'Số năm kinh nghiệm không được rỗng' }),
+            }).messages({
+                'object.base': 'Kỹ năng chuyên môn cần nhập vào là object',
+            }),
+        )
+        .messages({
+            'array.base': 'Kỹ năng chuyên môn cần nhập vào là array',
+        }),
     candidateId,
 });
+
+// personal information: thông tin cá nhân
+// general information: thông tin chung

@@ -1,9 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
 import { resBadRequest, resFormatResponse, _throwError, validateSchema } from '../utils/index.js';
 
-import { schemaCandidate } from './candidate.validate.js';
+import { schemaCandidate, schemaCandidateProfessionalSkills } from './candidate.validate.js';
 import {
     handlerCandidateUpdate,
+    handlerCandidateUpdatePatch,
     handlerCandidateGetInformationByEmail,
     handlerCandidateGetInformationById,
     handlerGetAboutMe,
@@ -49,6 +50,32 @@ export const candidateUpdate = async (req, res) => {
      * update data
      */
     const { success, message, data = null, error = [] } = await handlerCandidateUpdate(value);
+    resFormatResponse(res, StatusCodes[success ? 'OK' : 'UNAUTHORIZED'], {
+        success,
+        message,
+        errors: error,
+        data,
+    });
+};
+
+export const candidateUpdateProfessionalSkills = async (req, res) => {
+    /**
+     * validate data come from req.body
+     */
+    const {
+        isValidated,
+        value,
+        error: _error,
+    } = validateSchema({ schema: schemaCandidateProfessionalSkills, item: { ...req.body } });
+    if (!isValidated) {
+        resFormatResponse(res, StatusCodes.UNAUTHORIZED, { success: false, message: 'Xảy ra lỗi', errors: _error });
+        return;
+    }
+
+    /**
+     * update data
+     */
+    const { success, message, data = null, error = [] } = await handlerCandidateUpdatePatch(value);
     resFormatResponse(res, StatusCodes[success ? 'OK' : 'UNAUTHORIZED'], {
         success,
         message,

@@ -21,38 +21,38 @@ export const password = Joi.string().min(5).trim().strict().required().messages(
     'string.empty': 'Password không được rỗng',
 });
 
-export const firstName = Joi.string().min(3).max(15).trim().strict().required().messages({
+export const firstName = Joi.string().min(1).max(15).trim().strict().required().messages({
     'any.required': 'Họ là bắt buộc',
-    'string.min': 'Họ có ít nhất 3 ký tự',
-    'string.max': 'Họ có ít nhất 15 ký tự',
+    'string.min': 'Họ có ít nhất {#limit} ký tự',
+    'string.max': 'Họ có ít nhất {#limit} ký tự',
     'string.empty': 'Họ không được trống',
 });
 
 export const lastName = Joi.string().min(3).max(35).trim().strict().required().messages({
     'any.required': 'Tên là bắt buộc',
-    'string.min': 'Tên có ít nhất 3 ký tự',
-    'string.max': 'Tên có ít nhất 35 ký tự',
+    'string.min': 'Tên có ít nhất {#limit} ký tự',
+    'string.max': 'Tên có ít nhất {#limit} ký tự',
     'string.empty': 'Tên không được trống',
 });
 
 export const fullName = Joi.string().min(3).max(50).trim().strict().required().messages({
     'any.required': 'Họ tên là bắt buộc',
-    'string.min': 'Họ tên có ít nhất 3 ký tự',
-    'string.max': 'Họ tên có ít nhất 20 ký tự',
+    'string.min': 'Họ tên có ít nhất {#limit} ký tự',
+    'string.max': 'Họ tên có ít nhất {#limit} ký tự',
     'string.empty': 'Họ tên không được trống',
 });
 
 export const company = Joi.string().min(3).max(100).trim().strict().required().messages({
     'any.required': 'Tên công ty là bắt buộc',
-    'string.min': 'Tên công ty có ít nhất 3 ký tự',
-    'string.max': 'Tên công ty có ít nhất 100 ký tự',
+    'string.min': 'Tên công ty có ít nhất {#limit} ký tự',
+    'string.max': 'Tên công ty có ít nhất {#limit} ký tự',
     'string.empty': 'Tên công ty tên không được trống',
 });
 
 export const position = Joi.string().min(3).max(100).trim().strict().required().messages({
     'any.required': 'Vị trí là bắt buộc',
-    'string.min': 'Vị trí ty có ít nhất 3 ký tự',
-    'string.max': 'Vị trí ty có ít nhất 100 ký tự',
+    'string.min': 'Vị trí ty có ít nhất {#limit} ký tự',
+    'string.max': 'Vị trí ty có ít nhất {#limit} ký tự',
     'string.empty': 'Vị trí ty tên không được trống',
 });
 

@@ -3,7 +3,7 @@ import EducationModel from '../models/education.model.js';
 import ExperienceModel from '../models/experience.model.js';
 import ReferenceModel from '../models/reference.modal.js';
 
-import { schemaCandidate } from './candidate.validate.js';
+import { schemaCandidate, schemaCandidateProfessionalSkills } from './candidate.validate.js';
 import { validateSchema } from '../utils/index.js';
 
 export const handlerCandidateGetInformationById = async (id) => {
@@ -110,4 +110,36 @@ export const handlerGetAboutMe = async (email) => {
         success: true,
         data: document,
     };
+};
+
+export const handlerCandidateUpdatePatch = async (item) => {
+    /**
+     * validate data trước khi lưu vào database
+     */
+    const { isValidated, message = '', value, error = [] } = validateSchema({ schema: schemaCandidateProfessionalSkills, item });
+    if (!isValidated) {
+        return {
+            success: false,
+            message,
+            error,
+            data: null,
+        };
+    }
+
+    const { _id } = value;
+
+    /**
+     * convert data
+     */
+    const res = await CandidateModel.updateOne({ _id: _id || '' }, value);
+
+    /**
+     * lấy thông tin vừa update
+     */
+    const _find = await handlerCandidateGetInformationById(_id);
+
+    /**
+     * return
+     */
+    return { success: true, message: 'Cập nhật thành công', error: [], data: _find ? _find : null };
 };
