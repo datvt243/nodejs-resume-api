@@ -33,6 +33,7 @@ const candidateShema = new Schema(
         education: { type: String, default: '', required: [false, 'Vui lòng nhập học vấn'] },
 
         gender: { type: Boolean, default: 0, required: [false, 'Vui lòng nhập giới tính'] },
+        marital: { type: Boolean, default: 0, required: [false, 'Vui lòng nhập tình trạng hôn nhân'] },
         birthday: { type: Number, default: 0, min: 0, required: [false, 'Vui lòng nhập ngày sinh'] },
         address: { type: String, default: '' },
 

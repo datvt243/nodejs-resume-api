@@ -24,7 +24,7 @@ const baseCheckDocumentById = async (_id) => {
         isExist = true;
         message = '';
     }
-    return { isExist, message };
+    return { isExist, message, document: _find };
 };
 
 export const baseFindDocument = async (props) => {
@@ -52,23 +52,21 @@ export const baseFindDocument = async (props) => {
 };
 
 export const baseDeleteDocument = async (props) => {
-    const { model: MODEL, _id, name = '', userID } = props;
+    const { model: MODEL, _id: __id, name = '', userID } = props;
     const _name = (name + '').toLowerCase();
 
     /**
-     * lấy doc cần delete
+     * Check Document có tồn tại không -> findById
      */
-    const _find = await MODEL.findById(_id).exec();
-    if (!_find)
-        return formatReturn({
-            success: false,
-            message: `Thông tin ${_name ? _name + ' ' : ''}không tồn tại`,
-        });
+    const { isExist, message: _mess, document } = await baseCheckDocumentById(__id);
+    if (!isExist) return formatReturn({ success: false, message: _mess });
+
+    const { _id, candidateId = '' } = document;
 
     /**
      * Kiểm tra doc cần xoá có thuộc người đang xoá hay không
      */
-    if (_find?.candidateId.toString() !== userID)
+    if (candidateId.toString() !== userID)
         return formatReturn({
             success: false,
             message: `Không thể xoá thông tin ${_name ? _name + ' ' : ''}không phải của bạn`,
@@ -81,7 +79,7 @@ export const baseDeleteDocument = async (props) => {
         message = 'Xoá thất bại',
         error = null;
     try {
-        const { deletedCount = 0 } = await MODEL.deleteOne({ _id: _find._id }).exec();
+        const { deletedCount = 0 } = await MODEL.deleteOne({ _id }).exec();
         success = !!deletedCount;
         message = 'Xoá thành công';
     } catch (err) {
@@ -97,6 +95,7 @@ export const baseDeleteDocument = async (props) => {
 
 export const baseUpdateDocument = async (props) => {
     const { schema, document, model: MODEL } = props;
+
     /**
      * @return {
      *  success: boolean,

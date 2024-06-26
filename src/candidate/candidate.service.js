@@ -47,11 +47,11 @@ export const handlerCandidateUpdate = async (item) => {
      * convert data
      */
     const res = await CandidateModel.updateOne({ _id: value._id || '' }, value).exec();
-
     /**
      * lấy thông tin vừa update
      */
-    const _find = await handlerCandidateGetInformationById(value._id);
+    const _select = getSelectFields(value);
+    const _find = await handlerCandidateGetInformationById(value._id, { select: _select });
 
     /**
      * return
@@ -127,4 +127,12 @@ export const handlerCandidateUpdatePatch = async (item) => {
      * return
      */
     return { success: true, message: 'Cập nhật thành công', error: [], data: _find ? _find : null };
+};
+
+const getSelectFields = (val) => {
+    let f = [];
+    for (const v of Object.keys(val)) {
+        f.push(v);
+    }
+    return f.join(' ');
 };

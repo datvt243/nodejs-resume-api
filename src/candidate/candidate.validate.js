@@ -47,6 +47,9 @@ export const schemaCandidate = getObject({
     education: Joi.string().min(3).max(255).trim().strict().required().messages({
         'any.required': 'Học vấn không được rỗng',
     }),
+    marital: Joi.boolean().required().messages({
+        'any.required': 'Tình trạng hôn nhân không được rỗng',
+    }),
     gender: Joi.boolean().required().messages({
         'any.required': 'Giới tính không được rỗng',
     }),
