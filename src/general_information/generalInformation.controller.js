@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
-import { _consolog, formatReturn, resBadRequest, resFormatResponse, _throwError, validateSchema } from '../utils/index.js';
+import { formatReturn, _throwError, validateSchema } from '../utils/index.js';
 
 import { schemaGeneralInformation, schemaGeneralInformationPatch } from './generalInformation.validate.js';
-import { handlerCreate, handlerUpdate, handerUpdateFields } from './generalInformation.service.js';
+import { handlerCreate, handlerUpdate, handlerDelete } from './generalInformation.service.js';
 
 const VALIDATE_SCHEMA = schemaGeneralInformation;
 const VALIDATE_SCHEMA_PATCH = schemaGeneralInformationPatch;
@@ -11,26 +11,25 @@ export const fnCreate = async (req, res) => {
     /**
      * validate data gửi lên
      */
-    const { isValidated, value = {}, error: errors } = validateSchema({ schema: VALIDATE_SCHEMA, item: { ...req.body } });
+    const { isValidated, value = {}, errors } = validateSchema({ schema: VALIDATE_SCHEMA, item: { ...req.body } });
     if (!isValidated) return formatReturn(res, { success: false, message: 'Lỗi validate', errors });
 
     /**
      * save mới document
      */
-    const _result = await handlerCreate(value);
-    return formatReturn(res, { ..._result });
+    try {
+        const _result = await handlerCreate(value);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };
 
 export const fnUpdate = async (req, res) => {
     /**
-     * validate data come from req.body
+     * validate data gửi lên
      */
-
-    const {
-        isValidated,
-        value,
-        error: errors,
-    } = validateSchema({
+    const { isValidated, value, errors } = validateSchema({
         schema: req.method === 'PUT' ? VALIDATE_SCHEMA : VALIDATE_SCHEMA_PATCH,
         item: { ...req.body },
     });
@@ -40,20 +39,19 @@ export const fnUpdate = async (req, res) => {
     /**
      * update data
      */
-    const _result = await handlerUpdate(value);
-    return formatReturn(res, { ..._result });
+    try {
+        const _result = await handlerUpdate(value);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };
 
 export const fnUpdateFields = async (req, res) => {
     /**
-     * validate data come from req.body
+     * validate data gửi lên
      */
-
-    const {
-        isValidated,
-        value,
-        error: errors,
-    } = validateSchema({
+    const { isValidated, value, errors } = validateSchema({
         schema: VALIDATE_SCHEMA_PATCH,
         item: { ...req.body },
     });
@@ -63,20 +61,25 @@ export const fnUpdateFields = async (req, res) => {
     /**
      * update data
      */
-    const _result = await handlerUpdate(value);
-    return formatReturn(res, { ..._result });
+    try {
+        const _result = await handlerUpdate(value);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };
 
 export const fnDelete = async (req, res) => {
-    /**
-     *
-     */
     const { id = '' } = req.params;
     if (!id) return formatReturn(res, { success: false, message: 'ID không được trống' });
 
     /**
      * delete
      */
-    const _result = await handlerDelete(id, req.body.candidateId);
-    return formatReturn(res, { ..._result });
+    try {
+        const _result = await handlerDelete?.(id, req.body.candidateId);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };

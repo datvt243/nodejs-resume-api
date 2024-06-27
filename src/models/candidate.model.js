@@ -8,8 +8,8 @@ const shema = new Schema(
         password: { type: String, default: '', required: [false, 'Vui lòng nhập email'] },
 
         /* họ và tên */
-        first_name: { type: String, default: '', required: [false, 'Vui lòng nhập họ'] },
-        last_name: { type: String, default: '', required: [false, 'Vui lòng nhập tên'] },
+        firstName: { type: String, default: '', required: [false, 'Vui lòng nhập họ'] },
+        lastName: { type: String, default: '', required: [false, 'Vui lòng nhập tên'] },
 
         gender: { type: Boolean, default: 0, required: [false, 'Vui lòng nhập giới tính'] },
         marital: { type: Boolean, default: 0, required: [false, 'Vui lòng nhập tình trạng hôn nhân'] },
@@ -18,11 +18,15 @@ const shema = new Schema(
 
         phone: { type: String, default: '', required: [false, 'Vui lòng nhập số điện thoại'] },
         introduction: { type: String, default: '', required: [false, 'Vui lòng nhập giới thiệu bản thân'] },
-
         socialMedia: {
+            github: { type: String, required: false },
+            linkedin: { type: String, required: false },
+            website: { type: String, required: false },
+        },
+        /* socialMedia: {
             type: Map,
             of: String,
-        },
+        }, */
     },
     { timestamps: true },
 );

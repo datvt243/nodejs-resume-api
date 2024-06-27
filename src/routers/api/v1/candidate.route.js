@@ -2,16 +2,10 @@
 import express from 'express';
 const router = express.Router();
 
-import {
-    candidateGetInformationByEmail,
-    candidateUpdate,
-    candidateUpdateFields,
-} from '../../../candidate/candidate.controller.js';
+import { fnGetInformationByEmail, fnUpdate, fnUpdateFields } from '../../../candidate/candidate.controller.js';
 
-router.get('/:email', candidateGetInformationByEmail);
-
-router.put('/update', candidateUpdate);
-router.patch('/update-fields', candidateUpdateFields);
-/* router.patch('/update', candidateUpdate); */
+router.get('/:email', fnGetInformationByEmail);
+router.put('/update', fnUpdate);
+router.patch('/update', fnUpdateFields);
 
 export default router;

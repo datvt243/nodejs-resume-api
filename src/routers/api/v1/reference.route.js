@@ -1,11 +1,11 @@
 /* const path = require('path'); */
 import express from 'express';
-import { referenceCreate, referenceUpdate, referenceDelete } from '../../../reference_information/reference.controller.js';
+import { fnCreate, fnUpdate, fnDelete } from '../../../reference_information/reference.controller.js';
 
 const router = express.Router();
 
-router.post('/create', referenceCreate);
-router.put('/update', referenceUpdate);
-router.delete('/delete/:id', referenceDelete);
+router.post('/create', fnCreate);
+router.put('/update', fnUpdate);
+router.delete('/delete/:id', fnDelete);
 
 export default router;

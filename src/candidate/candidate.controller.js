@@ -1,69 +1,70 @@
 import { StatusCodes } from 'http-status-codes';
-import { _consolog, formatReturn, resBadRequest, resFormatResponse, _throwError, validateSchema } from '../utils/index.js';
-
+import { formatReturn, validateSchema, _throwError } from '../utils/index.js';
 import { schemaCandidate, schemaCandidatePatch } from './candidate.validate.js';
 import {
-    handlerCandidateUpdate,
-    handlerCandidateUpdatePatch,
-    handlerCandidateGetInformationByEmail,
-    handlerCandidateGetInformationById,
+    handlerUpdate,
+    handlerGetInformationByEmail,
+    handlerGetInformationById,
     handlerGetAboutMe,
 } from './candidate.service.js';
 
-export const candidateGetInformationById = async (req, res) => {
+export const fnGetInformationById = async (req, res) => {
     const { id = '', email = '' } = req.params;
-    const doc = await handlerCandidateGetInformationById(id);
+    const doc = await handlerGetInformationById(id);
 
     const _flag = !!doc;
     return formatReturn(res, { success: _flag, message: _flag ? '' : 'Không tìm thấy người dùng', data: doc });
 };
 
-export const candidateGetInformationByEmail = async (req, res) => {
+export const fnGetInformationByEmail = async (req, res) => {
     const { email = '' } = req.params;
-    const doc = await handlerCandidateGetInformationByEmail(email);
-
+    const doc = await handlerGetInformationByEmail(email);
     const _flag = !!doc;
     return formatReturn(res, { success: _flag, message: _flag ? '' : 'Không tìm thấy người dùng', data: doc });
 };
 
-export const candidateUpdate = async (req, res) => {
+export const fnUpdate = async (req, res) => {
     /**
      * validate data come from req.body
      */
-    const { isValidated, value, error: errors } = validateSchema({ schema: schemaCandidate, item: { ...req.body } });
+    const { isValidated, value, errors } = validateSchema({ schema: schemaCandidate, item: { ...req.body } });
     if (!isValidated)
         return formatReturn(res, { statusCode: StatusCodes.UNAUTHORIZED, success: false, message: 'Xảy ra lỗi', errors });
 
     /**
      * update data
      */
-    const _result = await handlerCandidateUpdate(value);
-    return formatReturn(res, { ..._result });
+    try {
+        const _result = await handlerUpdate(value);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };
 
-export const candidateUpdateFields = async (req, res) => {
+export const fnUpdateFields = async (req, res) => {
     /**
-     * validate data come from req.body
+     * validate data gửi lên
      */
-    const {
-        isValidated: success,
-        value,
-        error: errors,
-    } = validateSchema({ schema: schemaCandidatePatch, item: { ...req.body } });
+    const { isValidated, value, errors } = validateSchema({
+        schema: schemaCandidatePatch,
+        item: { ...req.body },
+    });
+    if (!isValidated)
+        return formatReturn(res, { statusCode: StatusCodes.UNAUTHORIZED, success: false, message: 'Xảy ra lỗi', errors });
 
-    if (!success)
-        return formatReturn(res, {
-            statusCode: StatusCodes.UNAUTHORIZED,
-            message: 'Lỗi validate',
-            success,
-            errors,
-        });
-
-    const _result = await handlerCandidateUpdatePatch(value);
-    return formatReturn(res, { ..._result });
+    /**
+     * update data
+     */
+    try {
+        const _result = await handlerUpdate(value);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };
 
-export const getAboutMe = async (req, res) => {
+export const fnGetAboutMe = async (req, res) => {
     /**
      *
      */
@@ -75,6 +76,13 @@ export const getAboutMe = async (req, res) => {
         });
     }
 
-    const _result = await handlerGetAboutMe(email);
-    return formatReturn(res, { ..._result });
+    /**
+     * get data
+     */
+    try {
+        const _result = await handlerGetAboutMe(email);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };

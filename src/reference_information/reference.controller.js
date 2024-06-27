@@ -1,66 +1,54 @@
 import { StatusCodes } from 'http-status-codes';
 import { schemaReference } from './reference.validate.js';
-import { formatReturn, validateSchema, resFormatResponse } from '../utils/index.js';
+import { formatReturn, validateSchema } from '../utils/index.js';
 
-import {
-    handlerReferenceCreate,
-    handlerReferenceUpdate,
-    handlerReferenceDelete,
-    handlerCheckExperienceId,
-} from './reference.service.js';
+import { handlerCreate, handlerUpdate, handlerDelete } from './reference.service.js';
 
-export const referenceCreate = async (req, res) => {
+const SCHEMA = schemaReference;
+export const fnCreate = async (req, res) => {
     /**
      * validate data gửi lên
      */
-    const { isValidated, value = {}, error: errors } = validateSchema({ schema: schemaReference, item: { ...req.body } });
+    const { isValidated, value = {}, errors } = validateSchema({ schema: SCHEMA, item: { ...req.body } });
     if (!isValidated) return formatReturn(res, { success: false, message: 'Lỗi validate _', errors });
 
     /**
      * save mới document
      */
-    const _result = await handlerReferenceCreate(value);
-    return formatReturn(res, { ..._result });
+    try {
+        const _result = await handlerCreate(value);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };
 
-export const referenceUpdate = async (req, res) => {
-    const _helper = _helperFn();
-
-    /**
-     * Kiểm tra có _id hay không, và _id có tồn tại trong db hay không
-     */
-    const _message = _helper.checkId(req.body._id);
-    if (_message) return formatReturn(res, { success: false, message: _message });
-
+export const fnUpdate = async (req, res) => {
     /**
      * validate data gửi lên
      */
-    const { isValidated, value = {}, error: errors } = validateSchema({ schema: schemaReference, item: { ...req.body } });
+    const { isValidated, value = {}, errors } = validateSchema({ schema: SCHEMA, item: { ...req.body } });
     if (!isValidated) return formatReturn(res, { success: false, message: 'Lỗi validate', errors });
 
     /**
      * update document
      */
-    const _result = await handlerReferenceUpdate(value);
-    return formatReturn(res, { ..._result });
-};
-
-export const referenceDelete = async (req, res) => {
-    const { id = '' } = req.params;
-    if (!id) {
-        return resFormatResponse(res, StatusCodes.BAD_REQUEST, { success: false, message: 'ID không được trống' });
+    try {
+        const _result = await handlerUpdate(value);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
     }
-
-    const _result = await handlerReferenceDelete(id, req.body.candidateId);
-    return formatReturn(res, { ..._result });
 };
 
-const _helperFn = () => {
-    return {
-        checkId: (id) => {
-            if (!id) return 'Field _id không được trống';
-            if (!handlerCheckExperienceId(id)) return 'Thông tin Kinh nghiệm làm việc không tồn tại';
-            return '';
-        },
-    };
+export const fnDelete = async (req, res) => {
+    const { id = '' } = req.params;
+    if (!id) return formatReturn(res, { success: false, message: 'ID không được trống' });
+
+    try {
+        const _result = await handlerDelete(id, req.body.candidateId);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };

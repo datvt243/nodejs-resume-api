@@ -24,3 +24,10 @@ export const professionalSkillsSchema = new Schema(
     },
     { _id: false },
 );
+export const socialMediaSchema = new Schema(
+    {
+        name: { type: String, required: true },
+        exp: { type: Number, required: true },
+    },
+    { _id: false },
+);

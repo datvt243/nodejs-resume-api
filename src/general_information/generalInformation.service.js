@@ -1,12 +1,7 @@
 import generalInformationShema from '../models/generalInformation.model.js';
 import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
-import { schemaGeneralInformation, schemaGeneralInformationPatch } from './generalInformation.validate.js';
-import { _consolog, validateSchema } from '../utils/index.js';
 
-const VALIDATE_SCHEMA = schemaGeneralInformation;
-const VALIDATE_SCHEMA_PATCH = schemaGeneralInformationPatch;
 const MODEL = generalInformationShema;
-
 export const handlerCreate = async (document) => {
     /**
      * @return {
@@ -30,8 +25,7 @@ export const handlerCreate = async (document) => {
             data = find;
         },
         hookHasErrors: ({ err }) => {
-            /* console.log({ errops: err });
-            _consolog(err); */
+            //
         },
     });
 };
@@ -48,7 +42,6 @@ export const handlerUpdate = async (document) => {
 
     return await baseUpdateDocument({
         document: { ...document },
-        schema: VALIDATE_SCHEMA,
         model: MODEL,
     });
 };
@@ -74,7 +67,6 @@ export const handerUpdateFields = async (req, res) => {
 
     return await basePatchDocument({
         document: { ...document },
-        schema: VALIDATE_SCHEMA,
         model: MODEL,
     });
 };

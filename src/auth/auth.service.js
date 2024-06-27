@@ -1,7 +1,6 @@
 /* import CandidateModel from '../candidate/candidate.model.js'; */
 import CandidateModel from '../models/candidate.model.js';
-import { schemaAuthLogin } from './auth.validate.js';
-import { generateSalt, compareHash, jwtSign, validateSchema } from '../utils/index.js';
+import { generateSalt, compareHash, jwtSign } from '../utils/index.js';
 import { TOKEN_SECRET, TOKEN_REFRESH } from '../config/process.config.js';
 
 export const isEmailAlreadyExists = async (email) => {
@@ -27,14 +26,12 @@ export const handlerRegister = async (item) => {
     if (emailHasExits) return { success: false, message: 'Email đã tồn tại' };
 
     /**
-     * validate data trước khi lưu vào database
+     * TODO: validate data với mogo model.valid
      */
-    const { isValidated, value = {} } = validateSchema({ schema: schemaAuthLogin, item: { email, password } });
-    if (!isValidated) return { success: false, message: 'Lỗi validate' };
 
-    const bcryptPwd = generateSalt(value.password);
+    const bcryptPwd = generateSalt(password);
     const document = await CandidateModel.create({
-        email: value.email,
+        email: email,
         password: bcryptPwd,
     });
     return { success: true, message: 'Đăng ký thành công' };
@@ -55,7 +52,7 @@ export const handlerLogin = async (data = {}) => {
     const { email, password } = data;
 
     const findUserByEmail = await CandidateModel.findOne({ email });
-    if (!findUserByEmail) return { success: false, message: 'email không tồn tại' };
+    if (!findUserByEmail) return { success: false, message: 'Email không tồn tại' };
 
     const { password: pwdHash } = findUserByEmail;
     const comparePwd = await compareHash(password, pwdHash);

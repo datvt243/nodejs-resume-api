@@ -1,36 +1,32 @@
 import ReferenceModel from '../models/reference.modal.js';
-
-import { schemaReference } from './reference.validate.js';
-import { _consolog, validateSchema } from '../utils/index.js';
-
 import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
 
-export const handlerReferenceCreate = async (item) => {
+const MODEL = ReferenceModel;
+export const handlerCreate = async (item) => {
     /**
      *
      */
     const result = await baseCreateDocument({
         document: { ...item },
-        schema: schemaReference,
-        model: ReferenceModel,
-        name: 'kinh nghiệm làm việc',
+        model: MODEL,
+        name: 'Thông tin người tham khảo',
         hookAfterSave: async (doc, { data }) => {
             const find = await baseFindDocument({
-                model: ReferenceModel,
+                model: MODEL,
                 fields: { candidateId: doc.candidateId },
                 findOne: false,
             });
             data = find;
         },
         hookHasErrors: ({ err }) => {
-            _consolog(err);
+            //
         },
     });
 
     return result;
 };
 
-export const handlerReferenceUpdate = async (item) => {
+export const handlerUpdate = async (item) => {
     /**
      * @return {
      *  success: boolean,
@@ -41,28 +37,16 @@ export const handlerReferenceUpdate = async (item) => {
      */
 
     return await baseUpdateDocument({
-        schema: schemaReference,
         document: item,
-        model: ReferenceModel,
+        model: MODEL,
     });
 };
 
-export const handlerReferenceDelete = async (id, userID) => {
+export const handlerDelete = async (id, userID) => {
     return await baseDeleteDocument({
-        model: ReferenceModel,
+        model: MODEL,
         _id: id,
         userID,
-        name: 'kinh nghiệm làm việc',
+        name: 'Thông tin người tham khảo',
     });
-};
-
-export const handlerCheckExperienceId = async (_id) => {
-    /**
-     *
-     */
-    const { success } = await baseFindDocument({
-        model: ReferenceModel,
-        fields: { _id },
-    });
-    return success;
 };

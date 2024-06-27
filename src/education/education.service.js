@@ -1,34 +1,32 @@
 import EducationModel from '../models/education.model.js';
-
-import { schemaEducation } from './education.validate.js';
-import { _consolog, validateSchema } from '../utils/index.js';
-
 import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
 
-export const handlerEducationCreate = async (item) => {
+const MODEL = EducationModel;
+const NAME = 'Học vấn';
+
+export const handlerCreate = async (item) => {
     /**
      *
      */
     return await baseCreateDocument({
         document: { ...item },
-        schema: schemaEducation,
-        model: EducationModel,
-        name: 'Học vấn',
+        model: MODEL,
+        name: NAME,
         hookAfterSave: async (doc, { data }) => {
             const find = await baseFindDocument({
-                model: EducationModel,
+                model: MODEL,
                 fields: { candidateId: doc.candidateId },
                 findOne: false, // Tìm tất cả
             });
             data = find;
         },
         hookHasErrors: ({ err }) => {
-            _consolog(err);
+            // do something
         },
     });
 };
 
-export const handlerEducationUpdate = async (item) => {
+export const handlerUpdate = async (item) => {
     /**
      * @return {
      *  success: boolean,
@@ -39,18 +37,17 @@ export const handlerEducationUpdate = async (item) => {
      */
 
     return await baseUpdateDocument({
-        schema: schemaEducation,
         document: item,
-        model: EducationModel,
+        model: MODEL,
     });
 };
 
-export const handlerEducationDelete = async (id, userID) => {
+export const handlerDelete = async (id, userID) => {
     return await baseDeleteDocument({
-        model: EducationModel,
+        model: MODEL,
         _id: id,
         userID,
-        name: 'học vấn',
+        name: NAME,
     });
 };
 
@@ -59,7 +56,7 @@ export const handlerCheckEducationId = async (_id) => {
      *
      */
     const { success } = await baseFindDocument({
-        model: EducationModel,
+        model: MODEL,
         fields: { _id },
     });
     return success;
@@ -70,7 +67,7 @@ export const handlerGetEducationById = async (_id) => {
      *
      */
     const { success, data } = await baseFindDocument({
-        model: EducationModel,
+        model: MODEL,
         fields: { _id },
     });
     return success ? find : {};

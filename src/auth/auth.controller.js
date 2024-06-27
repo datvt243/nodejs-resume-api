@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { validateSchema, resFormatResponse } from '../utils/index.js';
+import { validateSchema, formatReturn, _throwError } from '../utils/index.js';
 
 import { schemaAuthRegister, schemaAuthLogin } from './auth.validate.js';
 import { handlerRegister, handlerLogin } from './auth.service.js';
@@ -12,27 +12,31 @@ export const authRegister = async (req, res) => {
      * validate dữ liệu đầu vào
      * { email, password, repassword } = req.body;
      */
-    const { isValidated, value = {}, error } = validateSchema({ schema: schemaAuthRegister, item: { ...req.body } });
+    const { isValidated, value = {}, errors, message } = validateSchema({ schema: schemaAuthRegister, item: { ...req.body } });
     if (!isValidated) {
-        return resFormatResponse(res, StatusCodes.UNAUTHORIZED, {
-            type: 'register',
+        return formatReturn(res, {
+            statusCode: StatusCodes.UNAUTHORIZED,
             success: false,
-            message: 'Lỗi validate',
-            errors: error,
+            message,
+            errors,
         });
     }
 
     /**
      * save mới document
      */
-    const { success, message } = await handlerRegister(value);
-    resFormatResponse(res, StatusCodes[success ? 'OK' : 'UNAUTHORIZED'], {
-        type: 'register',
-        success: success,
-        message,
-        errors: null,
-        data: null,
-    });
+    try {
+        const _result = await handlerRegister(value);
+        return formatReturn(res, {
+            statusCode: StatusCodes[_result?.success ? 'OK' : 'UNAUTHORIZED'],
+            success: _result?.success || true,
+            message: _result?.message || 'Đăng ký thành công',
+            errors: null,
+            data: null,
+        });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };
 
 /**
@@ -42,32 +46,43 @@ export const authLogin = async (req, res) => {
     /**
      * validate date come from req
      */
-    const { isValidated, value = {} } = validateSchema({ schema: schemaAuthLogin, item: { ...req.query } });
+    const { isValidated, value = {}, message, errors } = validateSchema({ schema: schemaAuthLogin, item: { ...req.query } });
     if (!isValidated) {
-        return resFormatResponse(res, StatusCodes.UNAUTHORIZED, {
-            type: 'login',
+        return formatReturn(res, {
+            statusCode: StatusCodes.UNAUTHORIZED,
             success: false,
-            message: 'Lỗi validate',
-            errors: null,
+            message,
+            errors,
         });
     }
 
     /**
      * tiến hành Login
      */
-    const { success, message, errors = null, data = null } = await handlerLogin({ email: value.email, password: value.password });
-    resFormatResponse(res, StatusCodes[success ? 'OK' : 'UNAUTHORIZED'], {
-        type: 'login',
-        success: success,
-        message,
-        errors,
-        data,
-    });
+    try {
+        const _result = await handlerLogin({ email: value.email, password: value.password });
+        return formatReturn(res, {
+            statusCode: StatusCodes[_result?.success ? 'OK' : 'UNAUTHORIZED'],
+            success: _result?.success || false,
+            message: _result?.message || 'Login thất bại',
+            errors: _result?.errors || [],
+            data: _result?.data || null,
+        });
+    } catch (err) {
+        _throwError(res, err);
+    }
 };
 
 /**
  * Chức năng Refresh token
  */
 export const authRefeshToken = async (req, res) => {
+    // coming soon
+};
+
+/**
+ * Chức năng Tạo mới RefreshToken
+ */
+export const authCreateRefeshToken = async (req, res) => {
     // coming soon
 };

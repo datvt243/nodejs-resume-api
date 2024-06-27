@@ -22,11 +22,12 @@ export const validateSchema = (props) => {
     const validOpt = { abortEarly: false }; // Báo lỗi tất cả 1 lượt
     const { error, value } = schema.validate({ ...item }, validOpt);
 
-    if (error) return { isValidated: false, message, error: formatValidateError(error) };
+    if (error) return { isValidated: false, message, errors: formatValidateError(error) };
 
     return {
         isValidated: true,
         value,
+        message: '',
     };
 };
 

@@ -3,10 +3,9 @@ import EducationModel from '../models/education.model.js';
 import ExperienceModel from '../models/experience.model.js';
 import ReferenceModel from '../models/reference.modal.js';
 
-import { schemaCandidate, schemaCandidatePatch } from './candidate.validate.js';
-import { _consolog, validateSchema } from '../utils/index.js';
+import { schemaCandidate } from './candidate.validate.js';
 
-export const handlerCandidateGetInformationById = async (id, props = {}) => {
+export const handlerGetInformationById = async (id, props = {}) => {
     const { select = '' } = props;
     const find = CandidateModel.findById(id);
     if (select) {
@@ -15,48 +14,56 @@ export const handlerCandidateGetInformationById = async (id, props = {}) => {
 
     return await find.exec();
 };
-export const handlerCandidateGetInformationByEmail = async (email) => {
+
+export const handlerGetInformationByEmail = async (email) => {
     const find = await CandidateModel.findOne({ email }).exec();
     return find;
 };
 
-export const handlerCandidateUpdate = async (item) => {
+export const handlerUpdate = async (item) => {
     /**
      * @return {
      *  success: boolean,
      *  message: string,
      *  data: Document,
-     *  error: Array
+     *  errors: Array
      * }
      */
+
+    if (!(await CandidateModel.findById(item._id))) {
+        return { success: false, message: 'ID không tồn tại' };
+    }
+
+    const value = { ...item };
 
     /**
      * validate data trước khi lưu vào database
      */
-    const { isValidated, message = '', value, error = [] } = validateSchema({ schema: schemaCandidate, item });
-    if (!isValidated) {
-        return {
-            success: false,
-            message,
-            error,
-            data: null,
-        };
+    try {
+        await CandidateModel.validate(value);
+    } catch (err) {
+        const { _message, errors: _errors } = err;
+        const errs = [];
+        for (const [k, v] of Object.entries(_errors)) {
+            errs.push(k);
+        }
+        return { success: false, message: _message, errors: errs, data: null };
     }
 
     /**
-     * convert data
+     * update
      */
     const res = await CandidateModel.updateOne({ _id: value._id || '' }, value).exec();
+
     /**
      * lấy thông tin vừa update
      */
     const _select = getSelectFields(value);
-    const _find = await handlerCandidateGetInformationById(value._id, { select: _select });
-
+    const _find = await handlerGetInformationById(value._id, { select: _select });
     /**
      * return
      */
-    return { success: true, message: 'Cập nhật thành công', error: [], data: _find ? _find : null };
+    return { success: true, message: 'Cập nhật thành công', errors: [], data: _find ? _find : {} };
 };
 
 export const handlerGetAboutMe = async (email) => {
@@ -94,39 +101,6 @@ export const handlerGetAboutMe = async (email) => {
         success: true,
         data: document,
     };
-};
-
-export const handlerCandidateUpdatePatch = async (item) => {
-    /**
-     * validate data trước khi lưu vào database
-     */
-    const { isValidated, message = '', value, error = [] } = validateSchema({ schema: schemaCandidatePatch, item });
-    if (!isValidated) {
-        return {
-            success: false,
-            message,
-            error,
-            data: null,
-        };
-    }
-
-    const { _id } = value;
-
-    /**
-     * convert data
-     */
-    const res = await CandidateModel.updateOne({ _id: _id || '' }, value).exec();
-
-    /**
-     * lấy thông tin vừa update
-     */
-    const _select = Object.keys(value);
-    const _find = await handlerCandidateGetInformationById(_id, { select: _select });
-
-    /**
-     * return
-     */
-    return { success: true, message: 'Cập nhật thành công', error: [], data: _find ? _find : null };
 };
 
 const getSelectFields = (val) => {

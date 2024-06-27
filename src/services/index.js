@@ -11,22 +11,6 @@ const formatReturn = (props) => {
     };
 };
 
-const baseCheckDocumentById = async (MODEL, _id) => {
-    let message = `ID không tồn tại`;
-
-    if (!_id) return { isExist: false, message };
-
-    let isExist = true;
-    const _find = await MODEL.findById(_id).exec();
-    if (!_find) {
-        isExist = false;
-    } else {
-        isExist = true;
-        message = '';
-    }
-    return { isExist, message, document: _find };
-};
-
 export const baseFindDocument = async (props) => {
     /**
      * Need: params { model, fields = {} }
@@ -58,7 +42,7 @@ export const baseDeleteDocument = async (props) => {
     /**
      * Check Document có tồn tại không -> findById
      */
-    const { isExist, message: _mess, document } = await baseCheckDocumentById(MODEL, __id);
+    const { isExist, message: _mess, document } = await _baseHelper().baseCheckDocumentById(MODEL, __id);
     if (!isExist) return formatReturn({ success: false, message: _mess });
 
     const { _id, candidateId = '' } = document;
@@ -114,7 +98,7 @@ export const baseUpdateDocument = async (props) => {
     /**
      * Check Document có tồn tại không -> findById
      */
-    const { isExist, message: _mess } = await baseCheckDocumentById(MODEL, _id);
+    const { isExist, message: _mess } = await _baseHelper().baseCheckDocumentById(MODEL, _id);
     if (!isExist) return formatReturn({ success: false, message: _mess });
 
     /**
@@ -213,14 +197,20 @@ export const basePatchDocument = async (props) => {
     /**
      * Check Document có tồn tại không -> findById
      */
-    const { isExist, message: _mess } = await baseCheckDocumentById(MODEL, _id);
+    const { isExist, message: _mess } = await _baseHelper().baseCheckDocumentById(MODEL, _id);
     if (!isExist) return formatReturn({ success: false, message: _mess });
 
     /**
      * validate data trước khi lưu vào database
      */
-    const { isValidated, message = '', value, error = [] } = validateSchema({ schema, item: document });
-    if (!isValidated) return formatReturn({ success: false, message, errors: error });
+    /* const { isValidated, message = '', value, errors = [] } = validateSchema({ schema, item: document });
+    if (!isValidated) return formatReturn({ success: false, message, errors }); */
+
+    /**
+     * validate ở mongoose model
+     */
+    const modelValid = await _baseHelper().modelValidate(MODEL, { ...document });
+    if (!modelValid.success) return formatReturn({ success: false, message: modelValid.message, errors: modelValid.errors });
 
     try {
         await MODEL.updateOne({ _id }, value).exec();
@@ -284,6 +274,21 @@ const _baseHelper = () => {
                 message: 'Lỗi không xác định',
                 errors: [],
             };
+        },
+        baseCheckDocumentById: async (MODEL, _id) => {
+            let message = `ID không tồn tại`;
+
+            if (!_id) return { isExist: false, message };
+
+            let isExist = true;
+            const _find = await MODEL.findById(_id).exec();
+            if (!_find) {
+                isExist = false;
+            } else {
+                isExist = true;
+                message = '';
+            }
+            return { isExist, message, document: _find };
         },
     };
 };
