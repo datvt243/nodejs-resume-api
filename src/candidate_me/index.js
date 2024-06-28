@@ -77,5 +77,6 @@ const handlerGetAboutMe = async (email) => {
     return {
         success: true,
         data: document,
+        message: 'Lấy thông tin ứng viên thành công',
     };
 };

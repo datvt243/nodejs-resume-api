@@ -31,7 +31,12 @@ router.use('/project', verifyToken, routeProject);
 router.use('/certificate', verifyToken, routeCertificate);
 
 router.get('/*', (req, res) => {
-    res.render('404');
+    res.status(404).json({
+        success: false,
+        message: 'Page not found',
+        errors: null,
+        dataa: null,
+    });
 });
 
 export default router;

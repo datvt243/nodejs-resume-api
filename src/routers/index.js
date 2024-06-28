@@ -23,6 +23,18 @@ router.use('/api/v1', routerAPI);
 router.get('/api/me/:email', fnGetAboutMe);
 
 /**
+ * 404
+ */
+router.get('/api/*', (req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Page not found',
+        errors: null,
+        dataa: null,
+    });
+});
+
+/**
  * get page home
  */
 router.get('/*', (req, res) => {
