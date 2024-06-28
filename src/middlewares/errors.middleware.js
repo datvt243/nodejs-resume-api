@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { StatusCodes } from 'http-status-codes';
 import { NODE_ENV } from '../config/process.config.js';
 import { _consolog } from '../utils/index.js';

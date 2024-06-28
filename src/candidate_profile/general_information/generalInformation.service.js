@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import generalInformationShema from '../../models/generalInformation.model.js';
 import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../../services/index.js';
 

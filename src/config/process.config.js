@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import 'dotenv/config';
 
 const ENV_KEYS = [

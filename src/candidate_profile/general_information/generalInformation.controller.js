@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { StatusCodes } from 'http-status-codes';
 import { handlerCreate, handlerUpdate, handlerDelete } from './generalInformation.service.js';
 import { schemaGeneralInformation, schemaGeneralInformationPatch } from './generalInformation.validate.js';

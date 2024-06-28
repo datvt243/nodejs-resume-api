@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { _consolog } from '../utils/index.js';
 
 export const validateSchema = (props) => {

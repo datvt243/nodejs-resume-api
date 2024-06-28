@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { StatusCodes } from 'http-status-codes';
 
 export const _throwError = (res, message) => {

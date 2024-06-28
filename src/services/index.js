@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { validateSchema } from '../utils/index.js';
 /* import { validateSchema, resFormatResponse, jwtVerify } from '../utils/index.js'; */
 

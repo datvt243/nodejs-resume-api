@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 /* import CandidateModel from '../candidate/candidate.model.js'; */
 import CandidateModel from '../models/candidate.model.js';
 import { generateSalt, compareHash, jwtSign } from '../utils/index.js';

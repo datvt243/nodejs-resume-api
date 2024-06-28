@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { StatusCodes } from 'http-status-codes';
 import { schemaProject } from './project.validate.js';
 import { handlerCreate, handlerUpdate, handlerDelete } from './project.service.js';

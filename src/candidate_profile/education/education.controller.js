@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { StatusCodes } from 'http-status-codes';
 import { schemaEducation } from './education.validate.js';
 import { handlerCreate, handlerUpdate, handlerDelete, handlerCheckEducationId } from './education.service.js';

@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import Joi from 'joi';
 import { email, password } from '../config/joi.config.js';
 

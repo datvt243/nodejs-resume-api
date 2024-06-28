@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description: Learning nodejs basic
+ */
+
 import 'dotenv/config';
 
 import path, { dirname } from 'path';

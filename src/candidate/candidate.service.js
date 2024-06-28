@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import CandidateModel from '../models/candidate.model.js';
 import { schemaCandidate } from './candidate.validate.js';
 

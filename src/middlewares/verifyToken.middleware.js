@@ -1,5 +1,11 @@
 // comming soon
 
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import jwt from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import { TOKEN_SECRET, TOKEN_REFRESH } from '../config/process.config.js';

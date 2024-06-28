@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { StatusCodes } from 'http-status-codes';
 import { formatReturn, validateSchema, _throwError } from '../utils/index.js';
 import { schemaCandidate, schemaCandidatePatch } from './candidate.validate.js';

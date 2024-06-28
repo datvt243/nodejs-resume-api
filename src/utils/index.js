@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 export * from './bcrypt.js';
 export * from './helper.js';
 export * from './jwt.js';

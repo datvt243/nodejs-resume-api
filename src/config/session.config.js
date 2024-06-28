@@ -1,3 +1,9 @@
+/**
+ * Author: Đạt Võ - https://github.com/datvt243
+ * Date: `--/--`
+ * Description:
+ */
+
 import { SESSION_SECRET } from './process.config.js';
 
 export const sessionConfig = () => ({
