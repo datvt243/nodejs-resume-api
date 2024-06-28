@@ -5,21 +5,19 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const shema = new Schema(
     {
         _id: ObjectId,
-        name: { type: String, default: '', required: [false, 'Vui lòng nhập tên dự án'] },
+        name: { type: String, default: '', required: [false, 'Vui lòng nhập tên chứng chỉ'] },
+        organization: { type: String, default: '', required: [false, 'Vui lòng nhập tên tổ chức'] },
         description: { type: String, default: '', required: [false, 'Vui lòng nhập mô tả'] },
-        position: { type: String, default: '', required: [false, 'Vui lòng nhập vị trí công việc'] },
-        technologyUsed: { type: Array, of: String },
-        companyId: ObjectId,
-        images: { type: Array, of: String },
-        link: { type: String, default: '', required: [false, 'Vui lòng nhập liên kết'] },
-        isWorking: { type: Boolean, default: false },
         startDate: { type: Number, default: '', required: [false, 'Vui lòng nhập ngày bắt đầu'] },
         endDate: { type: Number, default: '', required: [false, 'Vui lòng nhập ngày kết thúc'] },
+        isNoExpiration: { type: Boolean, default: false },
+        link: { type: String, default: '', required: [false, 'Vui lòng nhập liên kết'] },
+        images: { type: Array, of: String },
         candidateId: { type: ObjectId, required: [true, 'Vui lòng nhập ID ứng viên'], ref: 'candidate' },
     },
     { timestamps: true },
 );
 
-const Project = mongoose.model('project', shema);
+const Certificate = mongoose.model('certificate', shema);
 
-export default Project;
+export default Certificate;

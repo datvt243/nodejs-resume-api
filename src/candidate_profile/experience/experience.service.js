@@ -1,5 +1,5 @@
-import ExperienceModel from '../models/experience.model.js';
-import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
+import ExperienceModel from '../../models/experience.model.js';
+import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../../services/index.js';
 
 const MODEL = ExperienceModel;
 export const handlerCreate = async (item) => {
@@ -11,12 +11,12 @@ export const handlerCreate = async (item) => {
         model: MODEL,
         name: 'kinh nghiệm làm việc',
         hookAfterSave: async (doc, { data }) => {
-            const find = await baseFindDocument({
+            const { success, data: find } = await baseFindDocument({
                 model: MODEL,
                 fields: { candidateId: doc.candidateId },
                 findOne: false,
             });
-            data = find;
+            success && (data = find);
         },
         hookHasErrors: ({ err }) => {
             //

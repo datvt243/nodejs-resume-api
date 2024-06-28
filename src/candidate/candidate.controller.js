@@ -1,12 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { formatReturn, validateSchema, _throwError } from '../utils/index.js';
 import { schemaCandidate, schemaCandidatePatch } from './candidate.validate.js';
-import {
-    handlerUpdate,
-    handlerGetInformationByEmail,
-    handlerGetInformationById,
-    handlerGetAboutMe,
-} from './candidate.service.js';
+import { handlerUpdate, handlerGetInformationByEmail, handlerGetInformationById } from './candidate.service.js';
 
 export const fnGetInformationById = async (req, res) => {
     const { id = '', email = '' } = req.params;
@@ -58,29 +53,6 @@ export const fnUpdateFields = async (req, res) => {
      */
     try {
         const _result = await handlerUpdate(value);
-        return formatReturn(res, { ..._result });
-    } catch (err) {
-        _throwError(res, err);
-    }
-};
-
-export const fnGetAboutMe = async (req, res) => {
-    /**
-     *
-     */
-    const { email = '' } = req.params;
-    if (!email) {
-        res.status(400).json({
-            success: false,
-            message: 'Không tìm thấy email',
-        });
-    }
-
-    /**
-     * get data
-     */
-    try {
-        const _result = await handlerGetAboutMe(email);
         return formatReturn(res, { ..._result });
     } catch (err) {
         _throwError(res, err);

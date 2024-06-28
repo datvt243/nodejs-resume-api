@@ -1,29 +1,28 @@
-import ReferenceModel from '../models/reference.modal.js';
-import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
+import ProjectModel from '../../models/project.model.js';
+import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../../services/index.js';
 
-const MODEL = ReferenceModel;
+const MODEL = ProjectModel;
+const NAME = 'dự án';
 export const handlerCreate = async (item) => {
     /**
      *
      */
-    const result = await baseCreateDocument({
+    return await baseCreateDocument({
         document: { ...item },
         model: MODEL,
-        name: 'Thông tin người tham khảo',
+        name: NAME,
         hookAfterSave: async (doc, { data }) => {
-            const find = await baseFindDocument({
+            const { success, data: find } = await baseFindDocument({
                 model: MODEL,
                 fields: { candidateId: doc.candidateId },
                 findOne: false,
             });
-            data = find;
+            success && (data = find);
         },
         hookHasErrors: ({ err }) => {
             //
         },
     });
-
-    return result;
 };
 
 export const handlerUpdate = async (item) => {
@@ -47,6 +46,6 @@ export const handlerDelete = async (id, userID) => {
         model: MODEL,
         _id: id,
         userID,
-        name: 'Thông tin người tham khảo',
+        name: NAME,
     });
 };

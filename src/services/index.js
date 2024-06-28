@@ -13,13 +13,12 @@ const formatReturn = (props) => {
 
 export const baseFindDocument = async (props) => {
     /**
-     * Need: params { model, fields = {} }
+     * get data
      */
-    const data = null;
-
     const { model: MODEL, fields = { _id: '' }, findOne = true } = props;
+
     if (!MODEL || !fields || !Object.keys(fields).length) {
-        success = false;
+        return formatReturn({ success: false, data: null });
     }
 
     let find;
@@ -140,6 +139,11 @@ export const baseUpdateDocument = async (props) => {
 export const baseCreateDocument = async (props) => {
     const { document, name = '', model: MODEL } = props;
     const _name = name ? (name + '').toLowerCase() : '';
+
+    /**
+     * remove _id nếu có
+     */
+    delete document._id;
 
     /**
      * Nếu không có candidateId thì trả về thất bại

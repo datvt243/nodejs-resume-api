@@ -1,6 +1,6 @@
 /* const path = require('path'); */
 import express from 'express';
-import { fnCreate, fnUpdate, fnDelete } from '../../../reference_information/reference.controller.js';
+import { fnCreate, fnUpdate, fnDelete } from '../../../candidate_profile/reference_information/reference.controller.js';
 
 const router = express.Router();
 

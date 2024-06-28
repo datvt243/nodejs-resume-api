@@ -1,6 +1,6 @@
 /* const path = require('path'); */
 import express from 'express';
-import { educationCreate, educationUpdate, educationDelete } from '../../../education/education.controller.js';
+import { educationCreate, educationUpdate, educationDelete } from '../../../candidate_profile/education/education.controller.js';
 
 const router = express.Router();
 

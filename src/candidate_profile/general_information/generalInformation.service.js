@@ -1,5 +1,5 @@
-import generalInformationShema from '../models/generalInformation.model.js';
-import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
+import generalInformationShema from '../../models/generalInformation.model.js';
+import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../../services/index.js';
 
 const MODEL = generalInformationShema;
 export const handlerCreate = async (document) => {
@@ -12,17 +12,35 @@ export const handlerCreate = async (document) => {
      * }
      */
 
+    /**
+     * check candidate đã có doc nào chưa,
+     *  - đã có: không lưu
+     */
+    const { success, data } = await baseFindDocument({
+        model: MODEL,
+        fields: { candidateId: document?.candidateId },
+    });
+    if (success) {
+        return {
+            success: false,
+            message: 'Ứng viên đã có thông tin, không thể lưu',
+        };
+    }
+
+    /**
+     * save
+     */
     return await baseCreateDocument({
         document: { ...document },
         model: MODEL,
         name: 'Thông tin chung',
         hookAfterSave: async (doc, { data }) => {
-            const find = await baseFindDocument({
+            const { success, data: find } = await baseFindDocument({
                 model: MODEL,
                 fields: { candidateId: doc.candidateId },
                 findOne: false,
             });
-            data = find;
+            success && (data = find);
         },
         hookHasErrors: ({ err }) => {
             //

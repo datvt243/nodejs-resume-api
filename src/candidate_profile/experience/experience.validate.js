@@ -9,7 +9,7 @@ import {
     startDate,
     endDate,
     introduction,
-} from '../config/joi.config.js';
+} from '../../config/joi.config.js';
 
 export const schemaExperience = Joi.object({
     _id,

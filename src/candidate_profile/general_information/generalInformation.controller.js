@@ -1,8 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
-import { formatReturn, _throwError, validateSchema } from '../utils/index.js';
-
-import { schemaGeneralInformation, schemaGeneralInformationPatch } from './generalInformation.validate.js';
 import { handlerCreate, handlerUpdate, handlerDelete } from './generalInformation.service.js';
+import { schemaGeneralInformation, schemaGeneralInformationPatch } from './generalInformation.validate.js';
+import { formatReturn, _throwError, validateSchema } from '../../utils/index.js';
 
 const VALIDATE_SCHEMA = schemaGeneralInformation;
 const VALIDATE_SCHEMA_PATCH = schemaGeneralInformationPatch;

@@ -3,11 +3,22 @@ import express from 'express';
 
 const router = express.Router();
 
-import { fnGetAboutMe } from '../candidate/candidate.controller.js';
+import { fnGetAboutMe } from '../candidate_me/index.js';
 import routerAPI from './api/v1/index.js';
 
+/**
+ * API V1
+ */
 router.use('/api/v1', routerAPI);
+
+/**
+ * get ME
+ */
 router.get('/api/me/:email', fnGetAboutMe);
+
+/**
+ * get page home
+ */
 router.get('/*', (req, res) => {
     res.send(
         `<div style="text-align: center; padding: 50px">

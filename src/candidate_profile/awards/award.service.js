@@ -1,9 +1,8 @@
-import EducationModel from '../models/education.model.js';
-import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../services/index.js';
+import AwardModel from '../../models/award.model.js';
+import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../../services/index.js';
 
-const MODEL = EducationModel;
-const NAME = 'Học vấn';
-
+const MODEL = AwardModel;
+const NAME = 'giải thưởng';
 export const handlerCreate = async (item) => {
     /**
      *
@@ -13,15 +12,15 @@ export const handlerCreate = async (item) => {
         model: MODEL,
         name: NAME,
         hookAfterSave: async (doc, { data }) => {
-            const find = await baseFindDocument({
+            const { success, data: find } = await baseFindDocument({
                 model: MODEL,
                 fields: { candidateId: doc.candidateId },
-                findOne: false, // Tìm tất cả
+                findOne: false,
             });
-            data = find;
+            success && (data = find);
         },
         hookHasErrors: ({ err }) => {
-            // do something
+            //
         },
     });
 };
@@ -49,26 +48,4 @@ export const handlerDelete = async (id, userID) => {
         userID,
         name: NAME,
     });
-};
-
-export const handlerCheckEducationId = async (_id) => {
-    /**
-     *
-     */
-    const { success } = await baseFindDocument({
-        model: MODEL,
-        fields: { _id },
-    });
-    return success;
-};
-
-export const handlerGetEducationById = async (_id) => {
-    /**
-     *
-     */
-    const { success, data } = await baseFindDocument({
-        model: MODEL,
-        fields: { _id },
-    });
-    return success ? find : {};
 };

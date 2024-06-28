@@ -1,13 +1,10 @@
 import CandidateModel from '../models/candidate.model.js';
-import EducationModel from '../models/education.model.js';
-import ExperienceModel from '../models/experience.model.js';
-import ReferenceModel from '../models/reference.modal.js';
-
 import { schemaCandidate } from './candidate.validate.js';
 
+const MODEL = CandidateModel;
 export const handlerGetInformationById = async (id, props = {}) => {
     const { select = '' } = props;
-    const find = CandidateModel.findById(id);
+    const find = MODEL.findById(id);
     if (select) {
         find.select(select);
     }
@@ -16,7 +13,7 @@ export const handlerGetInformationById = async (id, props = {}) => {
 };
 
 export const handlerGetInformationByEmail = async (email) => {
-    const find = await CandidateModel.findOne({ email }).exec();
+    const find = await MODEL.findOne({ email }).exec();
     return find;
 };
 
@@ -30,7 +27,7 @@ export const handlerUpdate = async (item) => {
      * }
      */
 
-    if (!(await CandidateModel.findById(item._id))) {
+    if (!(await MODEL.findById(item._id))) {
         return { success: false, message: 'ID không tồn tại' };
     }
 
@@ -40,7 +37,7 @@ export const handlerUpdate = async (item) => {
      * validate data trước khi lưu vào database
      */
     try {
-        await CandidateModel.validate(value);
+        await MODEL.validate(value);
     } catch (err) {
         const { _message, errors: _errors } = err;
         const errs = [];
@@ -53,7 +50,7 @@ export const handlerUpdate = async (item) => {
     /**
      * update
      */
-    const res = await CandidateModel.updateOne({ _id: value._id || '' }, value).exec();
+    const res = await MODEL.updateOne({ _id: value._id || '' }, value).exec();
 
     /**
      * lấy thông tin vừa update
@@ -64,43 +61,6 @@ export const handlerUpdate = async (item) => {
      * return
      */
     return { success: true, message: 'Cập nhật thành công', errors: [], data: _find ? _find : {} };
-};
-
-export const handlerGetAboutMe = async (email) => {
-    const document = await CandidateModel.findOne({ email }).exec();
-
-    /* const document = { ...find }; */
-    if (!document) {
-        return {
-            success: false,
-            message: 'Email không tồn tại',
-            data: null,
-        };
-    }
-
-    const { _id } = document;
-
-    /**
-     * lấy thông tin liên quan [học vấn, kinh nghiệm, người liên hệ]
-     */
-    const getMoreInfo = [
-        { collection: 'experiences', model: ExperienceModel },
-        { collection: 'educations', model: EducationModel },
-        { collection: 'references', model: ReferenceModel },
-    ];
-
-    for (const { collection, model } of getMoreInfo) {
-        document[collection] = [];
-        const _datas = await model.find({ candidateId: _id });
-        if (_datas) {
-            document._doc[collection] = _datas;
-        }
-    }
-
-    return {
-        success: true,
-        data: document,
-    };
 };
 
 const getSelectFields = (val) => {

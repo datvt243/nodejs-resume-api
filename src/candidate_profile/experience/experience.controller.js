@@ -1,16 +1,14 @@
 import { StatusCodes } from 'http-status-codes';
-import { schemaEducation } from './education.validate.js';
-import { formatReturn, validateSchema } from '../utils/index.js';
+import { schemaExperience } from './experience.validate.js';
+import { handlerCreate, handlerUpdate, handlerDelete } from './experience.service.js';
+import { validateSchema, formatReturn, _throwError } from '../../utils/index.js';
 
-import { handlerCreate, handlerUpdate, handlerDelete, handlerCheckEducationId } from './education.service.js';
-
-const SCHEMA = schemaEducation;
-export const educationCreate = async (req, res) => {
+export const fnCreate = async (req, res) => {
     /**
      * validate data gửi lên
      */
-    const { isValidated, value = {}, errors } = validateSchema({ schema: SCHEMA, item: { ...req.body } });
-    if (!isValidated) return formatReturn(res, { success: false, message: 'Lỗi validate', errors });
+    const { isValidated, value = {}, errors, message } = validateSchema({ schema: schemaExperience, item: { ...req.body } });
+    if (!isValidated) return formatReturn(res, { success: false, message, errors });
 
     /**
      * save mới document
@@ -24,12 +22,20 @@ export const educationCreate = async (req, res) => {
     }
 };
 
-export const educationUpdate = async (req, res) => {
+export const fnUpdate = async (req, res) => {
     /**
      * validate data gửi lên
      */
-    const { isValidated, value = {}, errors } = validateSchema({ schema: SCHEMA, item: { ...req.body } });
-    if (!isValidated) return formatReturn(res, { success: false, message: 'Lỗi validate', errors });
+    const {
+        isValidated,
+        value = {},
+        errors,
+        message,
+    } = validateSchema({
+        schema: schemaExperience,
+        item: { ...req.body },
+    });
+    if (!isValidated) return formatReturn(res, { success: false, message, errors });
 
     /**
      * update document
@@ -43,7 +49,7 @@ export const educationUpdate = async (req, res) => {
     }
 };
 
-export const educationDelete = async (req, res) => {
+export const fnDelete = async (req, res) => {
     const { id = '' } = req.params;
     if (!id) return formatReturn(res, { success: false, message: 'ID không được trống' });
 
@@ -51,7 +57,7 @@ export const educationDelete = async (req, res) => {
      * delete
      */
     try {
-        const _result = await handlerDelete(id, req.body.candidateId);
+        const _result = await handlerDelete?.(id, req.body.candidateId);
         return formatReturn(res, { ..._result });
     } catch (err) {
         _throwError(res, err);

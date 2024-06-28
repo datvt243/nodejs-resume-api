@@ -11,7 +11,7 @@ import {
     foreignLanguage,
     _arrayString,
     _stringDefault,
-} from '../config/joi.config.js';
+} from '../../config/joi.config.js';
 
 const _sub = {
     candidateId,

@@ -1,17 +1,11 @@
 /* const path = require('path'); */
 import express from 'express';
-import {
-    fnCreate,
-    fnUpdate,
-    fnDelete,
-    fnUpdateFields,
-} from '../../../candidate_profile/general_information/generalInformation.controller.js';
+import { fnCreate, fnUpdate, fnDelete } from '../../../candidate_profile/awards/award.controller.js';
 
 const router = express.Router();
 
 router.post('/create', fnCreate);
 router.put('/update', fnUpdate);
-router.patch('/update', fnUpdateFields);
 router.delete('/delete/:id', fnDelete);
 
 export default router;

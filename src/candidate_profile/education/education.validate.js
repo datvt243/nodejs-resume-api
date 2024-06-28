@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { _id, _boolean, candidateId, startDate, endDate, introduction } from '../config/joi.config.js';
+import { _id, _boolean, candidateId, startDate, endDate, introduction } from '../../config/joi.config.js';
 
 export const schemaEducation = Joi.object({
     _id,

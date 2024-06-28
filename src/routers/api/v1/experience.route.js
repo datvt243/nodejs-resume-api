@@ -1,6 +1,6 @@
 /* const path = require('path'); */
 import express from 'express';
-import { fnCreate, fnUpdate, fnDelete } from '../../../experience/experience.controller.js';
+import { fnCreate, fnUpdate, fnDelete } from '../../../candidate_profile/experience/experience.controller.js';
 
 const router = express.Router();
 
