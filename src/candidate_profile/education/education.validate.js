@@ -9,7 +9,7 @@ import { _id, _boolean, candidateId, startDate, endDate, introduction } from '..
 
 export const schemaEducation = Joi.object({
     _id,
-    shool: Joi.string().min(10).max(255).trim().strict().required().messages({
+    school: Joi.string().min(10).max(255).trim().strict().required().messages({
         'any.required': 'Tên trường là bắt buộc',
         'string.min': 'Tên trường có ít nhất 10 ký tự',
         'string.max': 'Tên trường có nhiều nhất 255 ký tự',
