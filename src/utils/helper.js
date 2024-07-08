@@ -40,7 +40,7 @@ export const formatResponse = (props) => {
      *      data: null | object{ token: string, user: object{ _id, name } } //  data trả về gồm token và thông tin user
      *  }
      */
-    const { type = '', success, message, errors, data = {} } = props;
+    const { type = '', success, message, errors = {}, data = {} } = props;
 
     const getData = (() => {
         if (!success) return null;

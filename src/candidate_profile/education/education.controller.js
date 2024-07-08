@@ -4,10 +4,9 @@
  * Description:
  */
 
-import { StatusCodes } from 'http-status-codes';
 import { schemaEducation } from './education.validate.js';
 import { handlerCreate, handlerUpdate, handlerDelete, handlerCheckEducationId } from './education.service.js';
-import { formatReturn, validateSchema } from '../../utils/index.js';
+import { formatReturn, validateSchema, _throwError } from '../../utils/index.js';
 
 const SCHEMA = schemaEducation;
 export const educationCreate = async (req, res) => {

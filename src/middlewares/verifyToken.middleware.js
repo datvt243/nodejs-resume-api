@@ -17,6 +17,7 @@ export const verifyToken = (req, res, next) => {
         return res.status(StatusCodes.UNAUTHORIZED).json({
             success: false,
             message: 'Access denied. No token provided.',
+            invalidToken: true,
         });
     }
 
@@ -33,6 +34,6 @@ export const verifyToken = (req, res, next) => {
         next();
         /**  */
     } catch (err) {
-        res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Invalid token.' });
+        res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Invalid token.', invalidToken: true });
     }
 };

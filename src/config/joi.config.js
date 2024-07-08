@@ -8,6 +8,19 @@ import Joi from 'joi';
 
 import { phoneRegex } from '../config/regex.config.js';
 
+// Định nghĩa một custom validator cho ObjectId của MongoDB
+const objectIdValidator = Joi.extend((joi) => ({
+    type: 'objectId',
+    base: joi
+        .string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .allow(null)
+        .required(),
+    messages: {
+        'objectId.base': '{{#label}} must be a valid ObjectId',
+    },
+}));
+
 export const settingJoiValidate = (props = {}) => {
     const { type = 'string', min = null, max = null, required = false, label = '', pattern = '' } = props;
 
@@ -52,7 +65,7 @@ export const settingJoiValidate = (props = {}) => {
     return _joi;
 };
 
-export const _id = Joi.string();
+export const _id = objectIdValidator.objectId().required();
 
 export const candidateId = Joi.string();
 

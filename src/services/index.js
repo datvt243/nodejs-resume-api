@@ -118,7 +118,7 @@ export const baseUpdateDocument = async (props) => {
     let _success = true,
         _message = 'Cập nhật thành công',
         _data = null,
-        _errors = [];
+        _errors = {};
 
     try {
         await MODEL.updateOne({ _id }, _valueUpdate).exec();
@@ -168,7 +168,7 @@ export const baseCreateDocument = async (props) => {
     let _success = true,
         _data = null,
         _message = `Thêm mới ${_name} thành công`,
-        _errors = [];
+        _errors = {};
 
     try {
         _data = await MODEL.create({ _id: null, ...document });
@@ -233,7 +233,7 @@ export const basePatchDocument = async (props) => {
         /**
          * return
          */
-        return { success: true, message: 'Cập nhật thành công', errors: [], data: _find ? _find : null };
+        return { success: true, message: 'Cập nhật thành công', errors: {}, data: _find ? _find : null };
     } catch (err) {
         /**
          * catch errors
@@ -282,7 +282,7 @@ const _baseHelper = () => {
 
             return {
                 message: 'Lỗi không xác định',
-                errors: [],
+                errors: {},
             };
         },
         baseCheckDocumentById: async (MODEL, _id) => {

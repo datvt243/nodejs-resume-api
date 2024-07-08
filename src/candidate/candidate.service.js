@@ -5,7 +5,6 @@
  */
 
 import CandidateModel from '../models/candidate.model.js';
-import { schemaCandidate } from './candidate.validate.js';
 
 const MODEL = CandidateModel;
 export const handlerGetInformationById = async (id, props = {}) => {
@@ -66,7 +65,7 @@ export const handlerUpdate = async (item) => {
     /**
      * return
      */
-    return { success: true, message: 'Cập nhật thành công', errors: [], data: _find ? _find : {} };
+    return { success: true, message: 'Cập nhật thành công', errors: {}, data: _find ? _find : {} };
 };
 
 const getSelectFields = (val) => {
