@@ -53,6 +53,8 @@ const handlerGetAboutMe = async (email) => {
 
     const { _id } = document;
 
+    delete document.password;
+
     /**
      * lấy thông tin liên quan [học vấn, kinh nghiệm, người liên hệ]
      */
@@ -70,7 +72,15 @@ const handlerGetAboutMe = async (email) => {
         document[collection] = [];
         const _datas = await model.find({ candidateId: _id });
         if (_datas) {
-            document._doc[collection] = _datas;
+            // remove _id, __v, createdAt, updatedAt
+            const __data = _datas.map((e) => {
+                for (const key of ['_id', '__v', 'createdAt', 'updatedAt']) {
+                    delete e[key];
+                }
+                return e;
+            });
+
+            document._doc[collection] = __data;
         }
     }
 

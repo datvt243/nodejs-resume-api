@@ -14,7 +14,7 @@ const shema = new Schema(
         name: { type: String, default: '', required: [false, 'Vui lòng nhập tên dự án'] },
         description: { type: String, default: '', required: [false, 'Vui lòng nhập mô tả'] },
         position: { type: String, default: '', required: [false, 'Vui lòng nhập vị trí công việc'] },
-        technologyUsed: { type: Array, of: String },
+        technology: { type: Array, of: String },
         companyId: ObjectId,
         images: { type: Array, of: String },
         link: { type: String, default: '', required: [false, 'Vui lòng nhập liên kết'] },
