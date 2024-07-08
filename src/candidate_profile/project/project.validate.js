@@ -23,7 +23,7 @@ export const schemaProject = Joi.object({
     name: _stringDefault({ min: 0, max: 50, title: 'Project' }),
     description: _stringDefault({ min: 0, max: 255, title: 'Mô tả' }),
     position: _stringDefault({ min: 0, max: 100, title: 'Vị trí' }),
-    technologyUsed: _arrayString,
+    technology: _arrayString,
     companyId: Joi.string().trim().strict().messages(),
     images: _arrayString,
     link: _stringDefault({ min: 0, max: 100, title: 'Liên kết' }),
