@@ -33,7 +33,9 @@ const _sub = {
         .messages({
             'array.base': 'Kỹ năng chuyên môn cần nhập vào là array',
         }),
-    personalSkills: _arrayString,
+    personalSkills: Joi.array().items({
+        name: Joi.string(),
+    }),
     foreignLanguages: foreignLanguages,
     socialMedia: Joi.object({
         github: Joi.string(),
