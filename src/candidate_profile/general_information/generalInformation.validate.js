@@ -9,10 +9,7 @@ import Joi from 'joi';
 import {
     getObject,
     _id,
-    firstName,
-    lastName,
     position,
-    phone,
     candidateId,
     foreignLanguages,
     _arrayString,

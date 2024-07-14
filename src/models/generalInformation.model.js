@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-import { foreignLanguageSchema, professionalSkillsSchema } from './part/index.js';
+import { foreignLanguageSchema, professionalSkillsSchema, personalSkills } from './part/index.js';
 
 const shema = new Schema(
     {
@@ -25,7 +25,7 @@ const shema = new Schema(
         workLocation: { type: String, default: '', required: [false, 'Vui lòng nhập địa điểm làm việc'] },
         workForm: { type: String, default: '', required: [false, 'Vui lòng nhập hình thưc làm việc'] },
         careerGoal: { type: String, default: '', required: [false, 'Vui lòng nhập hình thưc làm việc'] },
-        personalSkills: { type: [String], default: [] },
+        personalSkills: { type: [personalSkills], default: [] },
         professionalSkills: { type: [professionalSkillsSchema], default: [] },
         foreignLanguages: {
             type: [foreignLanguageSchema],

@@ -30,6 +30,12 @@ export const professionalSkillsSchema = new Schema(
     },
     { _id: false },
 );
+export const personalSkills = new Schema(
+    {
+        name: { type: String, required: true },
+    },
+    { _id: false },
+);
 export const socialMediaSchema = new Schema(
     {
         name: { type: String, required: true },
