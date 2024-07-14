@@ -148,7 +148,7 @@ export const endDate = Joi.number().greater(Joi.ref('startDate')).messages({
 export const _boolean = Joi.boolean();
 export const _arrayString = Joi.array().items(Joi.string());
 
-export const foreignLanguage = Joi.array().items({
+export const foreignLanguages = Joi.array().items({
     language: Joi.string(),
     level: Joi.string(),
 });
