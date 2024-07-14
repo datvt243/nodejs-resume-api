@@ -23,8 +23,8 @@ const shema = new Schema(
         education: { type: String, default: '', required: [false, 'Vui lòng học vấn'] },
         yearsOfExperience: { type: Number, default: 0, required: [false, 'Vui lòng nhập số năm kinh nghiệm'] },
         workLocation: { type: String, default: '', required: [false, 'Vui lòng nhập địa điểm làm việc'] },
-        workForm: { type: String, default: '', required: [false, 'Vui lòng nhập hình thưc làm việc'] },
-        careerGoal: { type: String, default: '', required: [false, 'Vui lòng nhập hình thưc làm việc'] },
+        workForm: { type: String, default: '', required: [false, 'Vui lòng nhập hình thức làm việc'] },
+        careerGoal: { type: String, default: '', required: [false, 'Vui lòng nhập mục tiêu công việc'] },
         personalSkills: { type: [personalSkills], default: [] },
         professionalSkills: { type: [professionalSkillsSchema], default: [] },
         foreignLanguages: {

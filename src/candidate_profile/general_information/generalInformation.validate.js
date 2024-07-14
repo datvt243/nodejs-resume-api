@@ -81,6 +81,9 @@ export const schemaGeneralInformation = getObject({
         'number.min': `{#label} không được nhỏ hơn {#limit}`,
     }),
     education: _stringDefault({ min: 3, max: 100, title: 'Học vấn' }),
+    workLocation: _stringDefault({ min: 3, max: 100, title: 'Địa điểm làm việc' }),
+    workForm: _stringDefault({ min: 0, max: 100, title: 'Hình thức làm việc' }),
+    careerGoal: _stringDefault({ min: 0, max: 100, title: 'Mục tiêu nghề nghiệp' }),
     yearsOfExperience: Joi.number().min(0).required().messages({
         'any.required': 'Số năm kinh nghiệm không được rỗng',
         'number.min': `Số năm kinh nghiệm không được nhỏ hơn {#limit}`,
