@@ -33,7 +33,6 @@ export const baseFindDocument = async (props) => {
     } else {
         find = await MODEL.find({ ...fields }).exec();
     }
-
     return formatReturn({
         success: true,
         data: find,

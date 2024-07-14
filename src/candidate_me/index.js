@@ -53,6 +53,17 @@ const handlerGetAboutMe = async (email) => {
 
     const { _id } = document;
 
+    /* const document = ((val) => {
+        const _result = {};
+        for (const key of Object.keys(val)) {
+            console.log({ key });
+            if (!['_id', 'password', '__v'].includes(key)) {
+                _result[key] = val[key];
+            }
+        }
+        return _result;
+    })(__doc?._doc || __doc); */
+
     delete document.password;
 
     /**
@@ -84,9 +95,26 @@ const handlerGetAboutMe = async (email) => {
         }
     }
 
+    const dataResult = JSON.parse(JSON.stringify(document));
+
+    /**
+     * remove các property bảo mật và dư thừa
+     */
+    const keys = ['_id', 'password', '__v', 'createdAt', 'updatedAt'];
+    for (const key of keys) {
+        delete dataResult[key];
+    }
+    for (const { collection } of getMoreInfo) {
+        for (const record of dataResult[collection]) {
+            for (const key of keys) {
+                delete record[key];
+            }
+        }
+    }
+
     return {
         success: true,
-        data: document,
+        data: dataResult,
         message: 'Lấy thông tin ứng viên thành công',
     };
 };

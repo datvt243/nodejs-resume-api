@@ -26,7 +26,7 @@ export const handlerCreate = async (document) => {
         model: MODEL,
         fields: { candidateId: document?.candidateId },
     });
-    if (success) {
+    if (success && !!data) {
         return {
             success: false,
             message: 'Ứng viên đã có thông tin, không thể lưu',
