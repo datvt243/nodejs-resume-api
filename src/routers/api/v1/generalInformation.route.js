@@ -7,6 +7,7 @@
 /* const path = require('path'); */
 import express from 'express';
 import {
+    fnGet,
     fnCreate,
     fnUpdate,
     fnDelete,
@@ -15,6 +16,7 @@ import {
 
 const router = express.Router();
 
+router.get('/', fnGet);
 router.post('/create', fnCreate);
 router.put('/update', fnUpdate);
 router.patch('/update', fnUpdateFields);

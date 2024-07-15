@@ -6,9 +6,20 @@
 
 import { StatusCodes } from 'http-status-codes';
 import { schemaExperience } from './experience.validate.js';
-import { handlerCreate, handlerUpdate, handlerDelete } from './experience.service.js';
+import { handlerGet, handlerCreate, handlerUpdate, handlerDelete } from './experience.service.js';
 import { validateSchema, formatReturn, _throwError } from '../../utils/index.js';
 
+export const fnGet = async (req, res) => {
+    const candidateId = req.body.candidateId || '';
+    if (!candidateId) return formatReturn(res, { statusCode: StatusCodes.NOT_FOUND, data: null, message: 'Không tìm thấy data' });
+    try {
+        const _result = await handlerGet(candidateId);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        console.log(err);
+        _throwError(res, err);
+    }
+};
 export const fnCreate = async (req, res) => {
     /**
      * validate data gửi lên

@@ -8,6 +8,11 @@ import generalInformationShema from '../../models/generalInformation.model.js';
 import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../../services/index.js';
 
 const MODEL = generalInformationShema;
+
+export const handlerGet = async (candidateId) => {
+    return await baseFindDocument({ fields: { candidateId: candidateId }, model: MODEL, findOne: false });
+};
+
 export const handlerCreate = async (document) => {
     /**
      * @return {

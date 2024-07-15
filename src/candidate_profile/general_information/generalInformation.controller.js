@@ -5,12 +5,24 @@
  */
 
 import { StatusCodes } from 'http-status-codes';
-import { handlerCreate, handlerUpdate, handlerDelete } from './generalInformation.service.js';
+import { handlerGet, handlerCreate, handlerUpdate, handlerDelete } from './generalInformation.service.js';
 import { schemaGeneralInformation, schemaGeneralInformationPatch } from './generalInformation.validate.js';
 import { formatReturn, _throwError, validateSchema } from '../../utils/index.js';
 
 const VALIDATE_SCHEMA = schemaGeneralInformation;
 const VALIDATE_SCHEMA_PATCH = schemaGeneralInformationPatch;
+
+export const fnGet = async (req, res) => {
+    const candidateId = req.body.candidateId || '';
+    if (!candidateId) return formatReturn(res, { statusCode: StatusCodes.NOT_FOUND, data: null, message: 'Không tìm thấy data' });
+    try {
+        const _result = await handlerGet(candidateId);
+        return formatReturn(res, { ..._result });
+    } catch (err) {
+        console.log(err);
+        _throwError(res, err);
+    }
+};
 
 export const fnCreate = async (req, res) => {
     /**

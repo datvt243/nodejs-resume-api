@@ -83,15 +83,7 @@ const handlerGetAboutMe = async (email) => {
         document[collection] = [];
         const _datas = await model.find({ candidateId: _id });
         if (_datas) {
-            // remove _id, __v, createdAt, updatedAt
-            const __data = _datas.map((e) => {
-                for (const key of ['_id', '__v', 'createdAt', 'updatedAt']) {
-                    delete e[key];
-                }
-                return e;
-            });
-
-            document._doc[collection] = __data;
+            document._doc[collection] = _datas;
         }
     }
 
@@ -100,7 +92,7 @@ const handlerGetAboutMe = async (email) => {
     /**
      * remove các property bảo mật và dư thừa
      */
-    const keys = ['_id', 'password', '__v', 'createdAt', 'updatedAt'];
+    const keys = ['password', '__v', 'createdAt', 'updatedAt'];
     for (const key of keys) {
         delete dataResult[key];
     }

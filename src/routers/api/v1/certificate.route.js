@@ -6,10 +6,11 @@
 
 /* const path = require('path'); */
 import express from 'express';
-import { fnCreate, fnUpdate, fnDelete } from '../../../candidate_profile/certificates/certificate.controller.js';
+import { fnGet, fnCreate, fnUpdate, fnDelete } from '../../../candidate_profile/certificates/certificate.controller.js';
 
 const router = express.Router();
 
+router.get('/', fnGet);
 router.post('/create', fnCreate);
 router.put('/update', fnUpdate);
 router.delete('/delete/:id', fnDelete);

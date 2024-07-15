@@ -9,6 +9,11 @@ import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDoc
 
 const MODEL = CertificateModel;
 const NAME = 'chứng chỉ';
+
+export const handlerGet = async (candidateId) => {
+    return await baseFindDocument({ fields: { candidateId: candidateId }, model: MODEL, findOne: false });
+};
+
 export const handlerCreate = async (item) => {
     /**
      *
