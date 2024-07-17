@@ -16,7 +16,6 @@ export const fnGet = async (req, res) => {
         const _result = await handlerGet(candidateId);
         return formatReturn(res, { ..._result });
     } catch (err) {
-        console.log(err);
         _throwError(res, err);
     }
 };
@@ -33,7 +32,7 @@ export const fnCreate = async (req, res) => {
     try {
         !value.isCurrent && (value.isCurrent = false);
         const _result = await handlerCreate(value);
-        return formatReturn(res, { ..._result });
+        return formatReturn(res, { statusCode: StatusCodes.CREATED, ..._result });
     } catch (err) {
         _throwError(res, err);
     }

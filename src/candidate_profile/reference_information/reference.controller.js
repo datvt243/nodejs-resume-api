@@ -7,7 +7,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { schemaReference } from './reference.validate.js';
 import { handlerGet, handlerCreate, handlerUpdate, handlerDelete } from './reference.service.js';
-import { formatReturn, validateSchema } from '../../utils/index.js';
+import { formatReturn, validateSchema, _throwError } from '../../utils/index.js';
 
 const SCHEMA = schemaReference;
 
@@ -18,7 +18,6 @@ export const fnGet = async (req, res) => {
         const _result = await handlerGet(candidateId);
         return formatReturn(res, { ..._result });
     } catch (err) {
-        console.log(err);
         _throwError(res, err);
     }
 };
@@ -35,7 +34,7 @@ export const fnCreate = async (req, res) => {
      */
     try {
         const _result = await handlerCreate(value);
-        return formatReturn(res, { ..._result });
+        return formatReturn(res, { statusCode: StatusCodes.CREATED, ..._result });
     } catch (err) {
         _throwError(res, err);
     }

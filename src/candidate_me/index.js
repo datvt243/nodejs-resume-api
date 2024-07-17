@@ -42,7 +42,6 @@ export const fnGetAboutMe = async (req, res) => {
 const handlerGetAboutMe = async (email) => {
     const document = await CandidateModel.findOne({ email }).exec();
 
-    /* const document = { ...find }; */
     if (!document) {
         return {
             success: false,
@@ -52,17 +51,6 @@ const handlerGetAboutMe = async (email) => {
     }
 
     const { _id } = document;
-
-    /* const document = ((val) => {
-        const _result = {};
-        for (const key of Object.keys(val)) {
-            console.log({ key });
-            if (!['_id', 'password', '__v'].includes(key)) {
-                _result[key] = val[key];
-            }
-        }
-        return _result;
-    })(__doc?._doc || __doc); */
 
     delete document.password;
 
