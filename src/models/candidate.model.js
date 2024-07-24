@@ -8,9 +8,10 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const shema = new Schema(
+const schema = new Schema(
     {
-        _id: ObjectId,
+        /* _id: ObjectId, */
+        _id: { type: ObjectId, required: [false, 'Vui lòng nhập ID ứng viên'] },
         email: { type: String, default: '', required: [false, 'Vui lòng nhập email'] },
         password: { type: String, default: '', required: [false, 'Vui lòng nhập email'] },
 
@@ -30,14 +31,10 @@ const shema = new Schema(
             linkedin: { type: String, required: false },
             website: { type: String, required: false },
         },
-        /* socialMedia: {
-            type: Map,
-            of: String,
-        }, */
     },
     { timestamps: true },
 );
 
-const Candidate = mongoose.model('candidate', shema);
+const Candidate = mongoose.model('candidate', schema);
 
 export default Candidate;
