@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
-const shema = new Schema(
+const schema = new Schema(
     {
         _id: ObjectId,
         school: { type: String, default: '', required: [false, 'Vui lòng nhập Tên trường'] },
@@ -22,6 +22,6 @@ const shema = new Schema(
     { timestamps: true },
 );
 
-const Education = mongoose.model('education', shema);
+const Education = mongoose.model('education', schema);
 
 export default Education;

@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const shema = new Schema(
+const schema = new Schema(
     {
         _id: ObjectId,
         name: { type: String, default: '', required: [false, 'Vui lòng nhập tên chứng chỉ'] },
@@ -24,6 +24,6 @@ const shema = new Schema(
     { timestamps: true },
 );
 
-const Certificate = mongoose.model('certificate', shema);
+const Certificate = mongoose.model('certificate', schema);
 
 export default Certificate;

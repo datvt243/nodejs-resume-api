@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const shema = new Schema(
+const schema = new Schema(
     {
         fullName: { type: String, default: '', required: [false, 'Vui lòng nhập Họ tên'] },
         phone: { type: String, default: '', required: [false, 'Vui lòng nhập Số điện thoại'] },
@@ -19,6 +19,6 @@ const shema = new Schema(
     { timestamps: true },
 );
 
-const Reference = mongoose.model('reference', shema);
+const Reference = mongoose.model('reference', schema);
 
 export default Reference;

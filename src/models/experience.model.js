@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const shema = new Schema(
+const schema = new Schema(
     {
         company: { type: String, default: '', required: [false, 'Vui lòng nhập Tên công ty'] },
         position: { type: String, default: '', required: [false, 'Vui lòng nhập vị trí công việc'] },
@@ -22,6 +22,6 @@ const shema = new Schema(
     { timestamps: true },
 );
 
-const Experience = mongoose.model('experience', shema);
+const Experience = mongoose.model('experience', schema);
 
 export default Experience;

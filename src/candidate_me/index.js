@@ -107,14 +107,20 @@ export const fnExportPDF = async (req, res) => {
      *
      */
 
-    const { success: _flag, data } = await baseFindDocument({ model: CandidateModel, _id: req.body.candidateId || '' });
+    const _id = req.body.candidateId;
+    if (!_id) {
+        res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'CandidateId not found' });
+        return;
+    }
 
-    if (!_flag) {
+    const find = await CandidateModel.findById(_id).exec();
+
+    if (!find) {
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Candidate not found' });
         return;
     }
 
-    const { email } = data;
+    const { email } = find;
     if (!email) {
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Email not found' });
         return;
@@ -122,6 +128,7 @@ export const fnExportPDF = async (req, res) => {
 
     try {
         const { success, data } = await handlerGetAboutMe(email);
+
         if (!success) {
             res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Lấy thông tin ứng viên thất bại' });
             return;

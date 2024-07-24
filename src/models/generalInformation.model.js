@@ -11,7 +11,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 import { foreignLanguageSchema, professionalSkillsSchema, personalSkills } from './part/index.js';
 
-const shema = new Schema(
+const schema = new Schema(
     {
         candidateId: { type: ObjectId, required: [true, 'Vui lòng nhập ID ứng viên'], ref: 'candidate' },
         /* vị trí mong muốn */
@@ -36,6 +36,6 @@ const shema = new Schema(
     { timestamps: true },
 );
 
-const generalInformation = mongoose.model('general-information', shema);
+const generalInformation = mongoose.model('general-information', schema);
 
 export default generalInformation;
