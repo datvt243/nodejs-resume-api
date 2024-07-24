@@ -10,6 +10,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const shema = new Schema(
     {
+        _id: ObjectId,
         email: { type: String, default: '', required: [false, 'Vui lòng nhập email'] },
         password: { type: String, default: '', required: [false, 'Vui lòng nhập email'] },
 
