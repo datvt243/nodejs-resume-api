@@ -7,9 +7,11 @@ import { handlerGetAboutMe } from '../candidate_me/index.js';
 export const createCV = async (data, res) => {
     try {
         const browser = await puppeteer.launch({
+            executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
+
         const page = await browser.newPage();
 
         // Thiết lập đường dẫn để lưu file tải xuống
