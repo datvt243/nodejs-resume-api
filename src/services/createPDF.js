@@ -6,7 +6,10 @@ import { handlerGetAboutMe } from '../candidate_me/index.js';
 
 export const createCV = async (data, res) => {
     try {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
         const page = await browser.newPage();
 
         // Thiết lập đường dẫn để lưu file tải xuống
@@ -37,14 +40,11 @@ export const createCV = async (data, res) => {
         /* await page.setContent(htmlContent); */
         /* await page.goto('http://localhost:3001/download'); */
 
-        /* const host = req.headers.host === 'localhost' ? 'http://localhost:3001' : 'https://nodejs-resume-api.onrender.com'; */
-
-        const _content = pageRender(data);
-        console.log({ _content });
         await page.setContent(pageRender(data));
 
         const mm = '5mm';
         const pdfBuffer = await page.pdf({
+            path: 'resume.pdf',
             format: 'A4',
             margin: {
                 top: mm,
