@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
-import path from 'path';
-import fs from 'fs';
+/* import path from 'path';
+import fs from 'fs'; */
 
 import { handlerGetAboutMe } from '../candidate_me/index.js';
 
@@ -10,8 +10,8 @@ export const createCV = async (data, res) => {
         const page = await browser.newPage();
 
         // Thiết lập đường dẫn để lưu file tải xuống
-        const downloadPath = path.resolve('downloads');
-        fs.mkdirSync(downloadPath, { recursive: true });
+        /* const downloadPath = path.resolve('downloads');
+        fs.mkdirSync(downloadPath, { recursive: true }); */
 
         // Chặn yêu cầu tải xuống
         /* await page.setRequestInterception(true);
@@ -39,6 +39,8 @@ export const createCV = async (data, res) => {
 
         /* const host = req.headers.host === 'localhost' ? 'http://localhost:3001' : 'https://nodejs-resume-api.onrender.com'; */
 
+        const _content = pageRender(data);
+        console.log({ _content });
         await page.setContent(pageRender(data));
 
         const mm = '5mm';
@@ -62,7 +64,7 @@ export const createCV = async (data, res) => {
     }
 };
 
-export const pageRender = async (RECORD) => {
+export const pageRender = (RECORD) => {
     /**
      * get data format
      */
