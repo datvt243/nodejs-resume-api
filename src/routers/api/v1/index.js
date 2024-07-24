@@ -6,7 +6,7 @@
 
 import path, { dirname } from 'path';
 import express from 'express';
-import { verifyToken } from '../../../middlewares/verifyToken.middleware.js';
+import { verifyToken, verifyTokenByQuery } from '../../../middlewares/verifyToken.middleware.js';
 
 const router = express.Router();
 
@@ -34,7 +34,7 @@ router.use('/project', verifyToken, routeProject);
 router.use('/certificate', verifyToken, routeCertificate);
 
 /* router.get('/render', pageRender); */
-router.get('/download-pdf', verifyToken, fnExportPDF);
+router.get('/download-pdf', verifyTokenByQuery, fnExportPDF);
 
 router.get('/*', (req, res) => {
     res.status(404).json({
