@@ -12,7 +12,7 @@ import {
     candidateId,
     startDate,
     endDate,
-    introduction,
+    description,
     _stringDefault,
     _arrayString,
     _boolean,
@@ -21,7 +21,7 @@ import {
 export const schemaProject = Joi.object({
     _id,
     name: _stringDefault({ min: 0, max: 50, title: 'Project' }),
-    description: _stringDefault({ min: 0, max: 255, title: 'Mô tả' }),
+    description,
     position: _stringDefault({ min: 0, max: 100, title: 'Vị trí' }),
     technology: _arrayString,
     companyId: Joi.string().trim().strict().messages(),

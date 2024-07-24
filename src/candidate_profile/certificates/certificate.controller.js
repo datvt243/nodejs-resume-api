@@ -9,7 +9,7 @@ import { schemaCertificate } from './certificate.validate.js';
 import { handlerGet, handlerCreate, handlerUpdate, handlerDelete } from './certificate.service.js';
 import { validateSchema, formatReturn, _throwError } from '../../utils/index.js';
 
-const SHCEMA = schemaCertificate;
+const SCHEMA = schemaCertificate;
 
 export const fnGet = async (req, res) => {
     const candidateId = req.body.candidateId || '';
@@ -26,7 +26,7 @@ export const fnCreate = async (req, res) => {
     /**
      * validate data gửi lên
      */
-    const { isValidated, value = {}, errors, message } = validateSchema({ schema: SHCEMA, item: { ...req.body } });
+    const { isValidated, value = {}, errors, message } = validateSchema({ schema: SCHEMA, item: { ...req.body } });
     if (!isValidated) return formatReturn(res, { success: false, message, errors });
 
     /**
@@ -51,7 +51,7 @@ export const fnUpdate = async (req, res) => {
         errors,
         message,
     } = validateSchema({
-        schema: SHCEMA,
+        schema: SCHEMA,
         item: { ...req.body },
     });
     if (!isValidated) return formatReturn(res, { success: false, message, errors });

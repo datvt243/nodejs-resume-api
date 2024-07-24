@@ -5,10 +5,13 @@
  */
 
 import { StatusCodes } from 'http-status-codes';
-import { formatReturn, validateSchema, _throwError } from '../utils/index.js';
+import { formatReturn, _throwError } from '../utils/index.js';
+
+import { createCV } from '../services/createPDF.js';
+import { baseFindDocument } from '../services/index.js';
 
 import CandidateModel from '../models/candidate.model.js';
-import generalInformationShema from '../models/generalInformation.model.js';
+import generalInformationSchema from '../models/generalInformation.model.js';
 import EducationModel from '../models/education.model.js';
 import ExperienceModel from '../models/experience.model.js';
 import ReferenceModel from '../models/reference.modal.js';
@@ -39,7 +42,7 @@ export const fnGetAboutMe = async (req, res) => {
     }
 };
 
-const handlerGetAboutMe = async (email) => {
+export const handlerGetAboutMe = async (email) => {
     const document = await CandidateModel.findOne({ email }).exec();
 
     if (!document) {
@@ -58,7 +61,7 @@ const handlerGetAboutMe = async (email) => {
      * lấy thông tin liên quan [học vấn, kinh nghiệm, người liên hệ]
      */
     const getMoreInfo = [
-        { collection: 'generalInformation', model: generalInformationShema },
+        { collection: 'generalInformation', model: generalInformationSchema },
         { collection: 'experiences', model: ExperienceModel },
         { collection: 'educations', model: EducationModel },
         { collection: 'references', model: ReferenceModel },
@@ -69,9 +72,9 @@ const handlerGetAboutMe = async (email) => {
 
     for (const { collection, model } of getMoreInfo) {
         document[collection] = [];
-        const _datas = await model.find({ candidateId: _id });
-        if (_datas) {
-            document._doc[collection] = _datas;
+        const _find = await model.find({ candidateId: _id });
+        if (_find) {
+            document._doc[collection] = _find;
         }
     }
 
@@ -97,4 +100,35 @@ const handlerGetAboutMe = async (email) => {
         data: dataResult,
         message: 'Lấy thông tin ứng viên thành công',
     };
+};
+
+export const fnExportPDF = async (req, res) => {
+    /**
+     *
+     */
+    const {
+        success: _flag,
+        data: { email = '' },
+    } = await baseFindDocument({ _id: req.body.candidateId || '' });
+
+    if (!_flag) {
+        res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Candidate not found' });
+        return;
+    }
+
+    if (!email) {
+        res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Email not found' });
+        return;
+    }
+
+    try {
+        const { success, data } = await handlerGetAboutMe(email);
+        if (!success) {
+            res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Lấy thông tin ứng viên thất bại' });
+            return;
+        }
+        await createCV(data, res);
+    } catch (err) {
+        _throwError(res, err);
+    }
 };

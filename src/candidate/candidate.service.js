@@ -24,12 +24,12 @@ export const handlerGetInformationByEmail = async (email) => {
 
 export const handlerUpdate = async (item) => {
     /**
-     * @return {
+     * @return
      *  success: boolean,
      *  message: string,
      *  data: Document,
      *  errors: Array
-     * }
+     *
      */
 
     if (!(await MODEL.findById(item._id))) {

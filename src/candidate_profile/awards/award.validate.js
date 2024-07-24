@@ -4,8 +4,9 @@
  * Description:
  */
 
+// @ts-ignore
 import Joi from 'joi';
-import { _id, _arrayString, candidateId, _stringDefault } from '../../config/joi.config.js';
+import { _id, _arrayString, candidateId, _stringDefault, description } from '../../config/joi.config.js';
 
 export const schemaAward = Joi.object({
     _id,
@@ -17,6 +18,6 @@ export const schemaAward = Joi.object({
     }),
     link: _stringDefault({ min: 0, max: 100, title: 'Liên kết' }),
     images: _arrayString,
-    description: _stringDefault({ min: 0, max: 255, title: 'Mô tả' }),
+    description: description,
     candidateId,
 });

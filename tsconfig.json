@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "nodenext",
+        "paths": {
+            "joi": ["./node_modules/joi"]
+        }
+    }
+}

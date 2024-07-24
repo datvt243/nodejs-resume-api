@@ -37,12 +37,12 @@ export const handlerCreate = async (item) => {
 
 export const handlerUpdate = async (item) => {
     /**
-     * @return {
+     * @return
      *  success: boolean,
      *  message: string,
      *  data: Document,
      *  error: Array
-     * }
+     *
      */
 
     return await baseUpdateDocument({

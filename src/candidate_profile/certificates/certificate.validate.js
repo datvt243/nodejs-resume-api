@@ -5,13 +5,22 @@
  */
 
 import Joi from 'joi';
-import { _id, _boolean, _arrayString, candidateId, startDate, endDate, _stringDefault } from '../../config/joi.config.js';
+import {
+    _id,
+    _boolean,
+    _arrayString,
+    candidateId,
+    startDate,
+    endDate,
+    _stringDefault,
+    description,
+} from '../../config/joi.config.js';
 
 export const schemaCertificate = Joi.object({
     _id,
     name: _stringDefault({ min: 0, max: 50, title: 'Chứng chỉ' }),
     organization: _stringDefault({ min: 0, max: 50, title: 'Tổ chức' }),
-    description: _stringDefault({ min: 0, max: 255, title: 'Mô tả' }),
+    description: description,
     startDate,
     endDate,
     isNoExpiration: _boolean,

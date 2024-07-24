@@ -32,7 +32,7 @@ export const handlerRegister = async (item) => {
     if (emailHasExits) return { success: false, message: 'Email đã tồn tại' };
 
     /**
-     * TODO: validate data với mogo model.valid
+     * TODO: validate data với mongo model.valid
      */
 
     const bcryptPwd = generateSalt(password);
@@ -84,8 +84,8 @@ export const handlerLogin = async (data = {}) => {
         data: {
             user: {
                 email: findUserByEmail.email,
-                first_name: findUserByEmail.first_name,
-                last_name: findUserByEmail.last_name,
+                first_name: findUserByEmail.firstName,
+                last_name: findUserByEmail.lastName,
             },
             token: token,
             tokenRefresh: tokenRefresh,

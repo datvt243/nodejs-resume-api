@@ -44,3 +44,11 @@ mixin toast(props = {})
                 strong.me-auto Thông báo
                 button.btn-close(type='button', data-bs-dismiss='toast', aria-label='Close')
             .toast-body= props.text
+
+
+mixin itemContent(props = { title: '', time: '', description: '' })
+    .item
+        .d-flex.between
+            .title props.title
+            .time props.time
+        .description props.description

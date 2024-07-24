@@ -4,10 +4,16 @@
  * Description:
  */
 
-import generalInformationShema from '../../models/generalInformation.model.js';
-import { baseFindDocument, baseDeleteDocument, baseUpdateDocument, baseCreateDocument } from '../../services/index.js';
+import generalInformationSchema from '../../models/generalInformation.model.js';
+import {
+    baseFindDocument,
+    baseDeleteDocument,
+    baseUpdateDocument,
+    baseCreateDocument,
+    basePatchDocument,
+} from '../../services/index.js';
 
-const MODEL = generalInformationShema;
+const MODEL = generalInformationSchema;
 
 export const handlerGet = async (candidateId) => {
     return await baseFindDocument({ fields: { candidateId: candidateId }, model: MODEL, findOne: false });
@@ -15,17 +21,17 @@ export const handlerGet = async (candidateId) => {
 
 export const handlerCreate = async (document) => {
     /**
-     * @return {
+     * @return
      *  success: boolean,
      *  message: string,
      *  data: Document,
      *  error: Array | null
-     * }
+     *
      */
 
     /**
-     * check candidate đã có doc nào chưa,
-     *  - đã có: không lưu
+     * check candidate has any document,
+     *  - is has: don't save
      */
     const { success, data } = await baseFindDocument({
         model: MODEL,
@@ -34,7 +40,7 @@ export const handlerCreate = async (document) => {
     if (success && !!data) {
         return {
             success: false,
-            message: 'Ứng viên đã có thông tin, không thể lưu',
+            message: 'Candidate already has information, can not save',
         };
     }
 
@@ -61,12 +67,12 @@ export const handlerCreate = async (document) => {
 
 export const handlerUpdate = async (document) => {
     /**
-     * @return {
+     * @return
      *  success: boolean,
      *  message: string,
      *  data: Document,
      *  error: Array | null
-     * }
+     *
      */
 
     return await baseUpdateDocument({
@@ -86,12 +92,12 @@ export const handlerDelete = async (id, userID) => {
 
 export const handerUpdateFields = async (req, res) => {
     /**
-     * @return {
+     * @return
      *  success: boolean,
      *  message: string,
      *  data: Document,
      *  error: Array | null
-     * }
+     *
      */
 
     return await basePatchDocument({

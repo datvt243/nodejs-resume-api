@@ -14,7 +14,7 @@ import {
     candidateId,
     startDate,
     endDate,
-    introduction,
+    description,
 } from '../../config/joi.config.js';
 
 export const schemaExperience = Joi.object({
@@ -24,7 +24,7 @@ export const schemaExperience = Joi.object({
     startDate,
     endDate,
     isCurrent: _boolean,
-    description: introduction,
+    description: description,
     candidateId,
     skills: _arrayString,
 });

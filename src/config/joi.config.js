@@ -153,6 +153,13 @@ export const foreignLanguages = Joi.array().items({
     level: Joi.string(),
 });
 
+export const description = Joi.string().min(0).trim().strict().required().label('Mô tả').messages({
+    'any.required': `{#label} là bắt buộc`,
+    'string.min': `{#label} có ít nhất {#limit} ký tự`,
+    'string.max': `{#label} có ít nhất {#limit} ký tự`,
+    'string.empty': `{#label} không được trống`,
+});
+
 export const _stringDefault = (props) => {
     const { min = 3, max = 100, title = 'Title' } = props;
     return Joi.string().min(min).max(max).trim().strict().required().label(title).messages({

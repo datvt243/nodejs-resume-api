@@ -8,12 +8,12 @@ import { _consolog } from '../utils/index.js';
 
 export const validateSchema = (props) => {
     /**
-     * @return {
+     * @return
      *  isValidated: boolean,
      *  value?: object,
      *  message?: object,
      *  error?: array
-     * }
+     *
      */
 
     const { schema = null, item = {} } = props;

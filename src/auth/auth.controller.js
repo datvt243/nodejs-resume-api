@@ -16,7 +16,7 @@ import { handlerRegister, handlerLogin } from './auth.service.js';
 export const authRegister = async (req, res) => {
     /**
      * validate dữ liệu đầu vào
-     * { email, password, repassword } = req.body;
+     * { email, password, re-password } = req.body;
      */
     const { isValidated, value = {}, errors, message } = validateSchema({ schema: schemaAuthRegister, item: { ...req.body } });
     if (!isValidated) {
@@ -82,13 +82,13 @@ export const authLogin = async (req, res) => {
 /**
  * Chức năng Refresh token
  */
-export const authRefeshToken = async (req, res) => {
+export const authRefreshToken = async (req, res) => {
     // coming soon
 };
 
 /**
  * Chức năng Tạo mới RefreshToken
  */
-export const authCreateRefeshToken = async (req, res) => {
+export const authCreateRefreshToken = async (req, res) => {
     // coming soon
 };

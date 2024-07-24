@@ -38,12 +38,12 @@ export const handlerCreate = async (item) => {
 
 export const handlerUpdate = async (item) => {
     /**
-     * @return {
+     * @return
      *  success: boolean,
      *  message: string,
      *  data: Document,
      *  error: Array
-     * }
+     *
      */
 
     return await baseUpdateDocument({
@@ -80,5 +80,5 @@ export const handlerGetEducationById = async (_id) => {
         model: MODEL,
         fields: { _id },
     });
-    return success ? find : {};
+    return success ? data : {};
 };

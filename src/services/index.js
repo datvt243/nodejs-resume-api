@@ -4,7 +4,7 @@
  * Description:
  */
 
-import { validateSchema } from '../utils/index.js';
+/* import { validateSchema } from '../utils/index.js'; */
 /* import { validateSchema, resFormatResponse, jwtVerify } from '../utils/index.js'; */
 
 const formatReturn = (props) => {
@@ -88,12 +88,12 @@ export const baseUpdateDocument = async (props) => {
     const { document, model: MODEL } = props;
 
     /**
-     * @return {
+     * @return
      *  success: boolean,
      *  message: string,
      *  data: Document,
      *  error: Array
-     * }
+     *
      */
 
     const _valueUpdate = { ...document };
@@ -184,7 +184,7 @@ export const baseCreateDocument = async (props) => {
         _errors = errors;
 
         /**
-         * callback thực hiện nếu xảy ra lỗi
+         * callback if it's has error
          */
         props?.hookHasErrors?.({ err });
     } finally {
@@ -210,7 +210,7 @@ export const basePatchDocument = async (props) => {
     if (!isExist) return formatReturn({ success: false, message: _mess });
 
     /**
-     * validate data trước khi lưu vào database
+     * validate data before save to database
      */
     /* const { isValidated, message = '', value, errors = [] } = validateSchema({ schema, item: document });
     if (!isValidated) return formatReturn({ success: false, message, errors }); */
@@ -222,22 +222,22 @@ export const basePatchDocument = async (props) => {
     if (!modelValid.success) return formatReturn({ success: false, message: modelValid.message, errors: modelValid.errors });
 
     try {
-        await MODEL.updateOne({ _id }, value).exec();
+        await MODEL.updateOne({ _id }, document).exec();
         /**
-         * lấy thông tin vừa update
+         * get information
          */
-        const select = Object.keys(value);
+        const select = Object.keys(document);
         const data = await _baseHelper().getDocumentUpdated(_id, { model: MODEL, select });
 
         /**
          * return
          */
-        return { success: true, message: 'Cập nhật thành công', errors: {}, data: _find ? _find : null };
+        return { success: true, message: 'Updated successful', errors: {}, data: data ? data : null };
     } catch (err) {
         /**
          * catch errors
          */
-        return { success: false, message: 'Cập nhật thất bại', error: err, data: null };
+        return { success: false, message: 'Updated fail', error: err, data: null };
     }
 };
 
@@ -280,7 +280,7 @@ const _baseHelper = () => {
             }
 
             return {
-                message: 'Lỗi không xác định',
+                message: 'An unknown error',
                 errors: {},
             };
         },

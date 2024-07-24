@@ -20,6 +20,9 @@ import routeProject from './project.route.js';
 import routeCertificate from './certificate.route.js';
 import routeAward from './award.route.js';
 
+/* import { pageRender } from '../../../services/createPDF.js'; */
+import { fnExportPDF } from '../../../candidate_me/index.js';
+
 router.use('/auth', routeAuth);
 router.use('/award', verifyToken, routeAward);
 router.use('/candidate', verifyToken, routeCandidate);
@@ -30,12 +33,15 @@ router.use('/general-information', verifyToken, routeGeneralInformation);
 router.use('/project', verifyToken, routeProject);
 router.use('/certificate', verifyToken, routeCertificate);
 
+/* router.get('/render', pageRender); */
+router.get('/download-pdf', verifyToken, fnExportPDF);
+
 router.get('/*', (req, res) => {
     res.status(404).json({
         success: false,
         message: 'Page not found',
         errors: null,
-        dataa: null,
+        data: null,
     });
 });
 
