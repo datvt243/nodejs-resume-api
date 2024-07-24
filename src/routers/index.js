@@ -9,7 +9,7 @@ import express from 'express';
 
 const router = express.Router();
 
-import { fnGetAboutMe, fnExportPDF } from '../candidate_me/index.js';
+import { fnGetAboutMe } from '../candidate_me/index.js';
 import routerAPI from './api/v1/index.js';
 
 /**
@@ -21,7 +21,6 @@ router.use('/api/v1', routerAPI);
  * get ME
  */
 router.get('/api/me/:email', fnGetAboutMe);
-router.get('/api/cv/:email', fnExportPDF);
 
 /**
  * 404
@@ -38,9 +37,6 @@ router.get('/api/*', (req, res) => {
 /**
  * get page home
  */
-router.get('/download', (req, res) => {
-    res.render('render', { title: 'Hey', message: 'Hello there!' });
-});
 router.get('/*', (req, res) => {
     res.send(
         `<div style="text-align: center; padding: 50px">

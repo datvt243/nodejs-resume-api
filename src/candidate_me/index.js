@@ -106,16 +106,15 @@ export const fnExportPDF = async (req, res) => {
     /**
      *
      */
-    const {
-        success: _flag,
-        data: { email = '' },
-    } = await baseFindDocument({ _id: req.body.candidateId || '' });
+
+    const { success: _flag, data } = await baseFindDocument({ _id: req.body.candidateId || '' });
 
     if (!_flag) {
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Candidate not found' });
         return;
     }
 
+    const { email } = data;
     if (!email) {
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Email not found' });
         return;
