@@ -107,7 +107,7 @@ export const fnExportPDF = async (req, res) => {
      *
      */
 
-    const { success: _flag, data } = await baseFindDocument({ _id: req.body.candidateId || '' });
+    const { success: _flag, data } = await baseFindDocument({ model: CandidateModel, _id: req.body.candidateId || '' });
 
     if (!_flag) {
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Candidate not found' });
