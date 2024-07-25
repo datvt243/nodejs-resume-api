@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer-core';
+import os from 'os';
 /* import path from 'path';
 import fs from 'fs'; */
 
@@ -6,8 +7,22 @@ import { handlerGetAboutMe } from '../candidate_me/index.js';
 
 export const createCV = async (data, res) => {
     try {
+        const platform = os.platform();
+        let executablePath;
+
+        if (platform === 'win32') {
+            executablePath = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
+        } else if (platform === 'darwin') {
+            executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+        } else if (platform === 'linux') {
+            executablePath = '/usr/bin/chromium-browser';
+        } else {
+            console.error('Hệ điều hành không được hỗ trợ.');
+            process.exit(1);
+        }
+
         const browser = await puppeteer.launch({
-            executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            executablePath,
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
