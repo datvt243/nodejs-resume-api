@@ -8,7 +8,7 @@ import { handlerGetAboutMe } from '../candidate_me/index.js';
 export const createCV = async (data, res) => {
     try {
         const platform = os.platform();
-        let executablePath;
+        let executablePath = '';
 
         if (platform === 'win32') {
             executablePath = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
@@ -20,6 +20,8 @@ export const createCV = async (data, res) => {
             console.error('Hệ điều hành không được hỗ trợ.');
             process.exit(1);
         }
+
+        console.log({ platform, executablePath });
 
         const browser = await puppeteer.launch({
             executablePath,
